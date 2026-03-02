@@ -1,0 +1,9 @@
+# 工作区临时文件
+workspace/
+
+# macOS
+.DS_Store
+
+# 临时文件
+*.tmp
+*.bak
