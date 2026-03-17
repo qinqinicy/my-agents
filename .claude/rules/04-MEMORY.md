@@ -55,6 +55,9 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 
 ### Technical
 
+- **Spring Boot JAR 打包** (2026-03-17): Nested JAR 必须使用 STORED（无压缩）模式。错误："compressed and nested jar files must be stored without compression"。解决：`zip -0` 处理 lib/*.jar，其余文件正常压缩。
+- **JWT 字段兼容性** (2026-03-17): iPaas OAuth 使用标准 JWT 字段（sub, name），代码需兼容多种字段名（userId/sub/userid, userName/name/username）。
+
 ## Important Decisions
 
 - **工作区结构** (2026-03-02): 采用 `Work/Projects/` 和 `Personal/Projects/` 区分工作项目和个人项目，各自有 `Archive/` 归档和 `Knowledge/` 知识库。
@@ -72,6 +75,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 | 项目 | 类型 | 状态 | 记忆档案 |
 |------|------|------|---------|
 | 横琴全空间无人体系智能数据中心 | Work | 详细设计阶段 | `memory/topics/横琴项目.md` |
+| 工单流转系统（决策后端）| Work | 调试中（401问题）| `memory/topics/工单流转系统.md` |
 | 2026 软考系统架构师备考 | Personal | 备考中 | `memory/topics/软考备考.md` |
 | 交通部第四批招聘笔试备考 | Personal | 备考中 | `memory/topics/交通部招聘笔试.md` |
 | 知识图谱产品手册 | Work | 知识库建设 | `memory/topics/知识图谱产品.md` |
