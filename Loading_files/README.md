@@ -1,20 +1,20 @@
 # Loading_files - 引用文件仓库
 
-> 这里是 Work/ 和 Personal/ 项目产出的**原始材料**存储地。
+> 这里是 `Projects/Work/` 和 `Projects/Personal/` 项目产出的**原始材料**存储地。
 
 ## 与项目区的映射关系
 
 ### Work/ (工作项目)
 
-| Loading_files/work/ | Work/projects/ | 状态 |
-|---------------------|----------------|------|
+| Loading_files/work/ | Projects/Work/projects/ | 状态 |
+|---------------------|-------------------------|------|
 | 横琴全空间无人体系智能数据中心项目 | 横琴全空间无人体系智能数据中心项目 | 进行中（主要项目） |
 | 深圳市南山区委政法委项目 | (已归档) | 已交付 |
 
 ### Personal/ (个人项目)
 
-| Loading_files/personal/ | Personal/projects/ | 状态 |
-|-------------------------|--------------------|------|
+| Loading_files/personal/ | Projects/Personal/projects/ | 状态 |
+|-------------------------|-----------------------------|------|
 | (空) | 交通部第四批招聘笔试备考 | 备考中 |
 
 ## 标准目录结构
@@ -61,12 +61,12 @@ Loading_files/work/深圳市南山区委政法委项目/
 
 1. **新增项目材料**：在对应项目的 `docs/` 或 `code/` 下存放
 2. **编译产物**：统一放入 `builds/` 目录，避免污染源码目录
-3. **项目关联**：每个 Loading_files 项目对应 Work/projects/ 或 Personal/projects/ 中的一个项目
-4. **自动整理**：每晚 11 点自动运行 `organize.py` 整理散落文件
+3. **项目关联**：每个 Loading_files 项目对应 `Projects/Work/projects/` 或 `Projects/Personal/projects/` 中的一个项目
+4. **自动整理**：通过心跳唤醒运行 `organize.py` 整理散落文件
 
 ## 自动整理
 
-系统配置了定时任务，每晚 11 点自动整理 Loading_files：
+通过心跳唤醒运行整理脚本：
 
 ```bash
 # 手动运行整理脚本
@@ -92,4 +92,4 @@ cat Loading_files/.organize.log
 ## 版本控制
 
 - `Loading_files/` 已在 `.gitignore` 中，不会被 Git 跟踪
-- 重要文档应同步到 Work/projects/ 或 Personal/projects/ 中的 Git 仓库
+- 重要文档应同步到 `Projects/Work/projects/` 或 `Projects/Personal/projects/` 中的 Git 仓库
