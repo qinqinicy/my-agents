@@ -15,7 +15,7 @@ Your memory has three layers, each with different responsibilities and access pa
 - What doesn't: detailed project experience (that's what topic files are for)
 - **Add a timestamp `(YYYY-MM-DD)` to each entry** — helps trace back, judge recency, clean up
 
-**Topic memory (`memory/topics/<name>.md`)** — Read before working on a project
+**Topic memory (`memory/topics/work/<name>.md` | `personal/<name>.md` | `public/<name>.md`)** — Read before working on a project
 - What goes here: full accumulated experience for one project/topic — status, key facts, what you did, what worked, what didn't, decisions and rationale, next steps
 - More detailed than core memory (which only has pointers), more synthesized than daily logs (which are raw chronological notes)
 - Update during memory maintenance or when a project enters a new phase
@@ -37,7 +37,7 @@ Daily logs (raw material) → topic files (synthesized per-project) → 04-MEMOR
 ### When to Read What
 
 - Just woke up → this file is already loaded + read today/yesterday's logs
-- About to work on a project → read its `memory/topics/<name>.md`
+- About to work on a project → read its `memory/topics/work/<name>.md` or `personal/<name>.md`
 - Memory maintenance → read all recent logs + all active topic files
 
 ---
@@ -48,7 +48,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 
 ### Working Style
 
-- **工作区划分** (2026-03-02): `Work/` 和 `Personal/` 是资产仓库，`memory/topics/` 是档案索引，`workspace/` 是每日草稿纸。项目文件存仓库，临时文件用完即弃。
+- **工作区划分** (2026-03-02): `Work/` 和 `Personal/` 是资产仓库，`memory/topics/` 是档案索引，`silentspace/` 是每日草稿纸。项目文件存仓库，临时文件用完即弃。
 - **记忆系统初始化** (2026-03-02): 为 4 个项目创建记忆档案：横琴项目、软考备考、知识图谱产品、交通部招聘笔试。
 
 ### Communication
@@ -60,7 +60,8 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 
 ## Important Decisions
 
-- **工作区结构** (2026-03-02): 采用 `Work/Projects/` 和 `Personal/Projects/` 区分工作项目和个人项目，各自有 `Archive/` 归档和 `Knowledge/` 知识库。
+- **工作区结构** (2026-03-02): 采用 `Work/projects/` 和 `Personal/projects/` 区分工作项目和个人项目，各自有 `Archive/` 归档和 `Knowledge/` 知识库。
+- **工作区重构** (2026-03-18): `workspace/` → `silentspace/`（临时工作台），`myagents_files/` → `Loading_files/`（引用文件仓库），`memory/topics/` 分为 `work/`、`personal/`、`public/` 三个子目录。
 
 ## User Preferences
 
@@ -74,11 +75,11 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 ### Active Projects
 | 项目 | 类型 | 状态 | 记忆档案 |
 |------|------|------|---------|
-| 横琴全空间无人体系智能数据中心 | Work | 详细设计阶段 | `memory/topics/横琴项目.md` |
-| 工单流转系统（决策后端）| Work | 调试中（401问题）| `memory/topics/工单流转系统.md` |
-| 2026 软考系统架构师备考 | Personal | 备考中 | `memory/topics/软考备考.md` |
-| 交通部第四批招聘笔试备考 | Personal | 备考中 | `memory/topics/交通部招聘笔试.md` |
-| 知识图谱产品手册 | Work | 知识库建设 | `memory/topics/知识图谱产品.md` |
+| 横琴全空间无人体系智能数据中心 | Work | 详细设计阶段 | `memory/topics/work/横琴项目.md` |
+| 工单流转系统（决策后端）| Work | 调试中（401问题）| `memory/topics/work/工单流转系统.md` |
+| 2026 软考系统架构师备考 | Personal | 备考中 | `memory/topics/personal/软考备考.md` |
+| 交通部第四批招聘笔试备考 | Personal | 备考中 | `memory/topics/personal/交通部招聘笔试.md` |
+| 知识图谱产品手册 | Work | 知识库建设 | `memory/topics/work/知识图谱产品.md` |
 
 ---
 

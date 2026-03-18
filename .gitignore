@@ -1,5 +1,11 @@
-# 工作区临时文件
-workspace/
+# 临时工作台（用完即弃）
+silentspace/
+
+# 引用文件（个人上传的文件仓库）
+Loading_files/
+
+# 项目依赖
+node_modules/
 
 # macOS
 .DS_Store
