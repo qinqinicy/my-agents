@@ -62,6 +62,32 @@ Loading_files/work/深圳市南山区委政法委项目/
 1. **新增项目材料**：在对应项目的 `docs/` 或 `code/` 下存放
 2. **编译产物**：统一放入 `builds/` 目录，避免污染源码目录
 3. **项目关联**：每个 Loading_files 项目对应 Work/projects/ 或 Personal/projects/ 中的一个项目
+4. **自动整理**：每晚 11 点自动运行 `organize.py` 整理散落文件
+
+## 自动整理
+
+系统配置了定时任务，每晚 11 点自动整理 Loading_files：
+
+```bash
+# 手动运行整理脚本
+python3 Loading_files/organize.py
+
+# 查看整理日志
+cat Loading_files/.organize.log
+```
+
+### 分类规则
+
+编辑 `.categories.json` 可自定义分类：
+
+| 分类 | 扩展名示例 | 匹配模式 |
+|------|------------|---------|
+| `docs/` | .md, .doc, .docx, .pdf | *需求*, *设计*, *说明* |
+| `code/` | .java, .js, .ts, .py | *.java, *.js |
+| `config/` | .yml, .json, .xml | pom.xml, package.json |
+| `builds/` | .jar, .war, .class | target/, build/, dist/ |
+| `assets/` | .png, .jpg, .svg | *图标*, *图片* |
+| `archive/` | .zip, .rar, .7z | - |
 
 ## 版本控制
 

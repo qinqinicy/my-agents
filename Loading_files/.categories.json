@@ -1,0 +1,47 @@
+{
+  "version": "1.0",
+  "description": "Loading_files 分类配置 - 可根据需要增改类别",
+  "categories": {
+    "docs": {
+      "name": "文档",
+      "extensions": [".md", ".doc", ".docx", ".pdf", ".txt", ".rtf", ".odt", ".pages"],
+      "patterns": ["*需求*", "*设计*", "*说明*", "*文档*", "*报告*", "*会议*", "*规格*"]
+    },
+    "code": {
+      "name": "代码",
+      "extensions": [".java", ".js", ".ts", ".jsx", ".tsx", ".py", ".go", ".rs", ".c", ".cpp", ".h", ".hpp", ".cs", ".php", ".rb", ".swift", ".kt", ".scala", ".sql", ".sh", ".bash"],
+      "patterns": ["*.java", "*.js", "*.ts", "*.py"]
+    },
+    "config": {
+      "name": "配置",
+      "extensions": [".yml", ".yaml", ".json", ".xml", ".toml", ".ini", ".conf", ".cfg", ".properties", ".env"],
+      "patterns": ["pom.xml", "package.json", "tsconfig.json", ".gitignore"]
+    },
+    "builds": {
+      "name": "构建产物",
+      "extensions": [".jar", ".war", ".ear", ".class", ".o", ".so", ".dll", ".exe", ".d"],
+      "patterns": ["target/", "build/", "dist/", "out/", "*.jar", "*.war"]
+    },
+    "assets": {
+      "name": "素材资源",
+      "extensions": [".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".bmp", ".webp", ".ttf", ".otf", ".woff", ".woff2", ".mp3", ".mp4", ".wav", ".avi", ".mov"],
+      "patterns": ["*图标*", "*图片*", "*logo*", "*banner*"]
+    },
+    "archive": {
+      "name": "压缩包",
+      "extensions": [".zip", ".tar", ".gz", ".rar", ".7z", ".bz2", ".xz"],
+      "patterns": []
+    }
+  },
+  "ignore": {
+    "patterns": [
+      ".git/",
+      ".DS_Store",
+      "*.log",
+      "node_modules/",
+      ".idea/",
+      ".vscode/"
+    ]
+  },
+  "projectAreas": ["work", "personal"]
+}
