@@ -48,8 +48,9 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 
 ### Working Style
 
-- **工作区划分** (2026-03-02): `Projects/Work/` 和 `Projects/Personal/` 是资产仓库，`AgentSystem/memory/topics/` 是档案索引，`SilentSpace/` 是每日草稿纸。项目文件存仓库，临时文件用完即弃。
+- **工作区划分** (2026-03-02): `Projects/` 是项目资产仓库，`Knowledge/` 和 `Archives/` 是跨项目知识库和归档库，`AgentSystem/memory/topics/` 是档案索引，`SilentSpace/` 是每日草稿纸。项目文件存仓库，临时文件用完即弃。
 - **记忆系统初始化** (2026-03-02): 为 4 个项目创建记忆档案：横琴项目、软考备考、知识图谱产品、交通部招聘笔试。
+- **工作区重构** (2026-03-18): `Knowledge/` 和 `Archives/` 提升至根目录，`Projects/Work/` 和 `Projects/Personal/` 下统一使用 `Projects/` 和 `Active/` 子目录。
 
 ### Communication
 
@@ -60,9 +61,14 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 
 ## Important Decisions
 
-- **工作区结构** (2026-03-02): 采用 `Projects/Work/projects/` 和 `Projects/Personal/projects/` 区分工作项目和个人项目，各自有 `Archive/` 归档和 `Knowledge/` 知识库。
-- **工作区重构** (2026-03-18): `workspace/` → `silentspace/`（临时工作台），`myagents_files/` → `Loading_files/`（引用文件仓库），`memory/topics/` 分为 `work/`、`personal/`、`public/` 三个子目录。
-- **Projects 整合** (2026-03-18): `Work/` 和 `Personal/` → `Projects/Work/` 和 `Projects/Personal/`，统一项目资产管理。
+- **工作区结构** (2026-03-02): 采用 `Projects/Work/` 和 `Projects/Personal/` 区分工作项目和个人项目，各自有 `Archive/` 归档和 `Knowledge/` 知识库。
+- **工作区重构** (2026-03-18):
+  - `workspace/` → `silentspace/`（临时工作台）
+  - `myagents_files/` → `Loading_files/`（引用文件仓库）
+  - `memory/topics/` 分为 `work/`、`personal/`、`public/` 三个子目录
+  - `Work/` 和 `Personal/` → `Projects/Work/` 和 `Projects/Personal/`（统一项目资产管理）
+  - `Knowledge/` 和 `Archives/` 提升至根目录（跨项目知识/归档）
+  - 统一大小写：`projects/` → `Projects/`，`active/` → `Active/`
 
 ## User Preferences
 
@@ -77,11 +83,11 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 ### Active Projects
 | 项目 | 类型 | 状态 | 记忆档案 |
 |------|------|------|---------|
-| 横琴全空间无人体系智能数据中心 | Projects/Work | 详细设计阶段 | `AgentSystem/memory/topics/work/横琴项目.md` |
-| 工单流转系统（决策后端）| Projects/Work | 调试中（401问题）| `AgentSystem/memory/topics/work/工单流转系统.md` |
-| 2026 软考系统架构师备考 | Projects/Personal | 备考中 | `AgentSystem/memory/topics/personal/软考备考.md` |
-| 交通部第四批招聘笔试备考 | Projects/Personal | 备考中 | `AgentSystem/memory/topics/personal/交通部招聘笔试.md` |
-| 知识图谱产品手册 | Projects/Work | 知识库建设 | `AgentSystem/memory/topics/work/知识图谱产品.md` |
+| 横琴全空间无人体系智能数据中心 | Work | 详细设计阶段 | `AgentSystem/memory/topics/work/横琴项目.md` |
+| 工单流转系统（决策后端）| Work | 调试中（401问题）| `AgentSystem/memory/topics/work/工单流转系统.md` |
+| 2026 软考系统架构师备考 | Personal | 备考中 | `AgentSystem/memory/topics/personal/软考备考.md` |
+| 交通部第四批招聘笔试备考 | Personal | 备考中 | `AgentSystem/memory/topics/personal/交通部招聘笔试.md` |
+| 知识图谱产品手册 | Work | 知识库建设 | `AgentSystem/memory/topics/work/知识图谱产品.md` |
 
 ---
 

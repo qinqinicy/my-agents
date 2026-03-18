@@ -6,14 +6,14 @@
 
 ### Work/ (工作项目)
 
-| Loading_files/work/ | Projects/Work/projects/ | 状态 |
+| Loading_files/work/ | Projects/Work/Projects/ | 状态 |
 |---------------------|-------------------------|------|
 | 横琴全空间无人体系智能数据中心项目 | 横琴全空间无人体系智能数据中心项目 | 进行中（主要项目） |
 | 深圳市南山区委政法委项目 | (已归档) | 已交付 |
 
 ### Personal/ (个人项目)
 
-| Loading_files/personal/ | Projects/Personal/projects/ | 状态 |
+| Loading_files/personal/ | Projects/Personal/Projects/ | 状态 |
 |-------------------------|-----------------------------|------|
 | (空) | 交通部第四批招聘笔试备考 | 备考中 |
 
@@ -61,8 +61,26 @@ Loading_files/work/深圳市南山区委政法委项目/
 
 1. **新增项目材料**：在对应项目的 `docs/` 或 `code/` 下存放
 2. **编译产物**：统一放入 `builds/` 目录，避免污染源码目录
-3. **项目关联**：每个 Loading_files 项目对应 `Projects/Work/projects/` 或 `Projects/Personal/projects/` 中的一个项目
+3. **项目关联**：每个 Loading_files 项目对应 `Projects/Work/Projects/` 或 `Projects/Personal/Projects/` 中的一个项目
 4. **自动整理**：通过心跳唤醒运行 `organize.py` 整理散落文件
+
+## 工作区结构
+
+```
+MyAgents/
+├── AgentSystem/          # Agent 核心系统
+├── Loading_files/        # 引用文件仓库（自动整理）
+├── Knowledge/            # 知识库（跨项目知识沉淀）
+├── Archives/             # 归档仓库（已交付项目归档）
+├── Projects/             # 项目资产
+│   ├── Work/             # 工作项目
+│   │   ├── Projects/     # 进行中项目
+│   │   └── Active/       # 活跃任务
+│   └── Personal/         # 个人项目
+│       ├── Projects/     # 进行中项目
+│       └── Active/       # 活跃任务
+└── SilentSpace/          # 临时工作台
+```
 
 ## 自动整理
 
@@ -92,4 +110,4 @@ cat Loading_files/.organize.log
 ## 版本控制
 
 - `Loading_files/` 已在 `.gitignore` 中，不会被 Git 跟踪
-- 重要文档应同步到 `Projects/Work/projects/` 或 `Projects/Personal/projects/` 中的 Git 仓库
+- 重要文档应同步到 `Projects/Work/Projects/` 或 `Projects/Personal/Projects/` 中的 Git 仓库
