@@ -50,7 +50,12 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 
 - **工作区划分** (2026-03-02): `Projects/` 是项目资产仓库，`Knowledge/` 和 `Archives/` 是跨项目知识库和归档库，`AgentSystem/memory/topics/` 是档案索引，`SilentSpace/` 是每日草稿纸。项目文件存仓库，临时文件用完即弃。
 - **记忆系统初始化** (2026-03-02): 为 4 个项目创建记忆档案：横琴项目、软考备考、知识图谱产品、交通部招聘笔试。
-- **工作区重构** (2026-03-18): `Knowledge/` 和 `Archives/` 提升至根目录，`Projects/Work/` 和 `Projects/Personal/` 下统一使用 `Projects/` 和 `Active/` 子目录。
+- **工作区重构** (2026-03-18):
+  - 核心分区标签：`work/` 和 `personal/`（小写统一）
+  - `Knowledge/` 提升至根目录，下设 `work/`、`personal/`、`public/`（公共知识融合）
+  - `Archives/` 提升至根目录，下设 `work/`、`personal/`
+  - `Projects/` 下直接使用状态前缀管理项目：`[WIP]` 进行中、`[HLD]` 暂停、`[OK]`/`[ARC]` 已完成
+  - 文件流转：`SilentSpace/` → `Loading_files/` → `Projects/` → `Archives/` 或 `Knowledge/`
 
 ### Communication
 
@@ -69,6 +74,11 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
   - `Work/` 和 `Personal/` → `Projects/Work/` 和 `Projects/Personal/`（统一项目资产管理）
   - `Knowledge/` 和 `Archives/` 提升至根目录（跨项目知识/归档）
   - 统一大小写：`projects/` → `Projects/`，`active/` → `Active/`
+- **工作区简化** (2026-03-18):
+  - 核心分区：`work/` 和 `personal/`（小写）
+  - `Projects/` 下移除 `Projects/` 和 `Active/` 子目录，改用状态前缀：`[WIP]`、`[HLD]`、`[OK]`
+  - `SilentSpace/`、`Loading_files/`、`Archives/`、`Knowledge/` 均按 `work/`、`personal/` 分类
+  - `Knowledge/` 新增 `public/` 融合公共知识
 
 ## User Preferences
 
