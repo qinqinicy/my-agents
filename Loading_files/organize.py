@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Loading_files 自动整理脚本
-每晚 11 点运行，将散落在项目根目录的文件按类型归类到对应目录
+整理 Loading_files/ 和 SilentSpace/ 下的散落文件
 """
 
 import json
@@ -121,7 +121,7 @@ def organize_project(project_path, categories, ignore_patterns):
 def main():
     """主函数"""
     log("=" * 50)
-    log("开始整理 Loading_files")
+    log("开始整理 Loading_files 和 SilentSpace")
 
     config = load_config()
     categories = config['categories']
@@ -131,7 +131,9 @@ def main():
     total_organized = 0
     all_moved = []
 
-    # 遍历每个项目区域 (work/personal)
+    # 整理 Loading_files/
+    log("")
+    log("--- Loading_files/ ---")
     for area in project_areas:
         area_path = SCRIPT_DIR / area
         if not area_path.exists():
@@ -146,7 +148,28 @@ def main():
             total_organized += organized
             all_moved.extend(moved)
 
+    # 整理 SilentSpace/
+    log("")
+    log("--- SilentSpace/ ---")
+    base_dir = SCRIPT_DIR.parent
+    silent_space = base_dir / "SilentSpace"
+    if silent_space.exists():
+        for area in project_areas:
+            area_path = silent_space / area
+            if not area_path.exists():
+                continue
+
+            # 遍历每个项目
+            for project_path in area_path.iterdir():
+                if not project_path.is_dir() or project_path.name.startswith('.'):
+                    continue
+
+                organized, moved = organize_project(project_path, categories, ignore_patterns)
+                total_organized += organized
+                all_moved.extend(moved)
+
     # 总结
+    log("")
     log(f"整理完成：共整理 {total_organized} 个文件/目录")
     if all_moved:
         log("移动详情:")
