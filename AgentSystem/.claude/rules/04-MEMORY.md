@@ -67,6 +67,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 
 - 用户同时处理工作项目（横琴数据中心）和个人提升（软考、交通部招聘考试）
 - 偏好用中文交流和记录
+- AI 名称：清 (2026-03-18)
 
 ## Technical Knowledge
 
