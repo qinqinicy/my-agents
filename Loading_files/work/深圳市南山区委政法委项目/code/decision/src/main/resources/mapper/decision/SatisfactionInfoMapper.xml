@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.decision.mapper.SatisfactionInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.sqx.modules.decision.entity.SatisfactionInfo" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="event_id" property="eventId" jdbcType="INTEGER" />
+    <result column="overall_satisfaction" property="overallSatisfaction" jdbcType="VARCHAR" />
+    <result column="evaluation_time" property="evaluationTime" jdbcType="TIMESTAMP" />
+    <result column="disposal_speed" property="disposalSpeed" jdbcType="INTEGER" />
+    <result column="treatment_effect" property="treatmentEffect" jdbcType="INTEGER" />
+    <result column="service_experience" property="serviceExperience" jdbcType="INTEGER" />
+    <result column="feedback_quality" property="feedbackQuality" jdbcType="INTEGER" />
+    <result column="evaluation_frequency" property="evaluationFrequency" jdbcType="INTEGER" />
+    <result column="evaluation_content" property="evaluationContent" jdbcType="VARCHAR" />
+  </resultMap>
+</mapper>
