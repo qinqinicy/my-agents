@@ -59,10 +59,7 @@ def organize_project(project_path, categories, ignore_patterns):
 
     organized_count = 0
     moved_files = []
-
-    # 确保标准目录存在
-    for cat_name in categories.keys():
-        (project_path / cat_name).mkdir(exist_ok=True)
+    pending_moves = []  # (file_item, category)
 
     # 扫描项目根目录的文件和子目录
     for item in project_path.iterdir():
@@ -79,43 +76,45 @@ def organize_project(project_path, categories, ignore_patterns):
             # 查找匹配的分类
             category = find_category(item, categories)
             if category:
-                target_dir = project_path / category
-                target_path = target_dir / item.name
-
-                # 处理重名文件
-                if target_path.exists():
-                    base = item.stem
-                    ext = item.suffix
-                    counter = 1
-                    while target_path.exists():
-                        target_path = target_dir / f"{base}_{counter}{ext}"
-                        counter += 1
-
-                shutil.move(str(item), str(target_path))
-                log(f"  移动：{item.name} → {category}/")
-                moved_files.append((item.name, category))
-                organized_count += 1
+                pending_moves.append((item, category))
             else:
                 log(f"  未分类：{item.name}")
 
         elif item.is_dir():
             # 检查是否是构建产物目录
             if item.name in ['target', 'build', 'dist', 'out']:
-                target_dir = project_path / 'builds' / item.name
-                target_dir.mkdir(parents=True, exist_ok=True)
+                pending_moves.append((item, 'builds'))
 
-                # 移动整个目录内容
-                if any(target_dir.iterdir()):
-                    # 如果目标已存在，合并内容
-                    for sub_item in item.iterdir():
-                        shutil.move(str(sub_item), str(target_dir / sub_item.name))
-                    item.rmdir()
-                else:
-                    shutil.move(str(item), str(target_dir))
+    # 只有当某类型有文件时才创建目录并移动
+    for item, category in pending_moves:
+        target_dir = project_path / category
+        target_dir.mkdir(exist_ok=True)
 
-                log(f"  移动目录：{item.name} → builds/")
-                moved_files.append((item.name, 'builds'))
-                organized_count += 1
+        if item.is_file():
+            target_path = target_dir / item.name
+            # 处理重名文件
+            if target_path.exists():
+                base = item.stem
+                ext = item.suffix
+                counter = 1
+                while target_path.exists():
+                    target_path = target_dir / f"{base}_{counter}{ext}"
+                    counter += 1
+            shutil.move(str(item), str(target_path))
+            log(f"  移动：{item.name} → {category}/")
+        elif item.is_dir():
+            target_path = target_dir / item.name
+            if target_path.exists():
+                # 合并目录
+                for sub_item in item.iterdir():
+                    shutil.move(str(sub_item), str(target_path / sub_item.name))
+                item.rmdir()
+            else:
+                shutil.move(str(item), str(target_path))
+            log(f"  移动目录：{item.name} → {category}/")
+
+        moved_files.append((item.name, category))
+        organized_count += 1
 
     return organized_count, moved_files
 
