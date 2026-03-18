@@ -1,0 +1,97 @@
+server:
+    servlet:
+        context-path: /decision
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        druid:
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            url: jdbc:mysql://mysql8:3306/decision?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+            username: deci
+            password: bydeci2024
+            initial-size: 10
+            max-active: 100
+            min-idle: 10
+            max-wait: 60000
+            pool-prepared-statements: true
+            max-pool-prepared-statement-per-connection-size: 20
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+            #Oracle需要打开注释
+            #validation-query: SELECT 1 FROM DUAL
+            test-while-idle: true
+            test-on-borrow: false
+            test-on-return: false
+            stat-view-servlet:
+                enabled: true
+                url-pattern: /druid/*
+                #login-username: admin
+                #login-password: admin
+            filter:
+                stat:
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: false
+                wall:
+                    config:
+                        multi-statement-allow: true
+#logging:
+#    level:
+#        root: debug
+#正式环境为29 灰度环境32
+user:
+    info:
+        url: http://ipaas-api.szns.gov.cn/29/user/getUserById
+    message:
+        url: http://ipaas-api.szns.gov.cn/44/wechat/sendMessage
+
+
+key:
+    monitor:
+        url: http://192.168.216.105:8000/jcfx/yjmx
+
+    user:
+        url: http://192.168.216.105:8000/zdr/tj
+
+    userdata:
+        url: http://192.168.216.105:8000/rkzbtj
+
+
+order:
+    circle:
+        url: http://ipaas-api.szns.gov.cn/34/order/cOrderCirculation/create
+    update:
+        url: http://ipaas-api.szns.gov.cn/34/order/cOrderNumberInfo/updateProcessInfo
+    download:
+        url: http://ipaas-api.szns.gov.cn/34/minio/download
+    order-num:
+        url: http://ipaas-api.szns.gov.cn/34/order/cOrderNumberRule/getNum
+    create-order:
+        url: http://ipaas-api.szns.gov.cn/34/order/cOrderNumberInfo/create
+    recAppCode: PANS-JCFX
+    sjfb: PANS-SJFB
+    wg: PANS-WGH
+    zfpa: PANS-ZFPA
+event:
+    detail:
+        url: http://ipaas-api.szns.gov.cn/86/datamesh-divide/eventBus/detailById
+        url1: http://ipaas-api.szns.gov.cn/83/pans/selectBaseWwytPerson/analysisStatistics/selectMaintainIssueByOrderNo
+        url2: http://10.200.25.197/sjfb/apiservice/standard/eventform/getEventDetail
+
+    dynamic:
+        url: http://ipaas-api.szns.gov.cn/87/getEventList
+    access-token:
+        url: http://ipaas-oauth.szns.gov.cn/oauth2/87/access_token
+    total:
+        url: http://ipaas-api.szns.gov.cn/87/getEventDayCount
+
+decision:
+    zfpa:
+        id: 72fb530deac2461fa7187a5b4fae76eb
+        username: 易小蓉科长
+    sjfb:
+        id: 090e5e4c952d4cb887448e1acf0cd11f
+        username: 汤开新主任
+    wg:
+        id: 8d467cff9dbe458f8712d5fc0fa68e74
+        username: 张雯雯部长

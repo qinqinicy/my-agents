@@ -53,9 +53,10 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - **工作区重构** (2026-03-18):
   - 核心分区标签：`work/` 和 `personal/`（小写统一）
   - `Knowledge/` 提升至根目录，下设 `work/`、`personal/`、`public/`（公共知识融合）
-  - `Archives/` 提升至根目录，下设 `work/`、`personal/`
-  - `Projects/` 下直接使用状态前缀管理项目：`[WIP]` 进行中、`[HLD]` 暂停、`[OK]`/`[ARC]` 已完成
-  - 文件流转：`SilentSpace/` → `Loading_files/` → `Projects/` → `Archives/` 或 `Knowledge/`
+  - `Archives/` 提升至根目录，下设 `work/`、`personal/`，增加 `ARCHIVES_LOG.md` 归档日志
+  - `Projects/` 下使用状态前缀管理项目：`[WIP]` 进行中、`[HLD]` 暂停；已完成项目直接归档至 `Archives/`
+  - 文件流转：`Loading_files/`（基础资料）→ `Projects/`（项目管理）→ `SilentSpace/`（临时工作台）→ `Archives/`（归档）→ `Knowledge/`（沉淀）
+  - 项目索引：`Projects/PROJECTS.md` 维护全局项目清单和映射关系
 
 ### Communication
 
@@ -76,9 +77,14 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
   - 统一大小写：`projects/` → `Projects/`，`active/` → `Active/`
 - **工作区简化** (2026-03-18):
   - 核心分区：`work/` 和 `personal/`（小写）
-  - `Projects/` 下移除 `Projects/` 和 `Active/` 子目录，改用状态前缀：`[WIP]`、`[HLD]`、`[OK]`
+  - `Projects/` 下移除 `Projects/` 和 `Active/` 子目录，改用状态前缀：`[WIP]`、`[HLD]`
   - `SilentSpace/`、`Loading_files/`、`Archives/`、`Knowledge/` 均按 `work/`、`personal/` 分类
   - `Knowledge/` 新增 `public/` 融合公共知识
+- **工作区最终简化** (2026-03-19):
+  - 移除 `[OK]` 状态，已完成项目直接归档至 `Archives/`（带 `[ARC]` 前缀）
+  - 创建 `Projects/PROJECTS.md` 全局项目索引，维护所有项目状态和映射关系
+  - 创建 `Archives/ARCHIVES_LOG.md` 归档日志，记录归档详情和知识沉淀路径
+  - 项目状态前缀统一：`[WIP]`（进行中）、`[HLD]`（暂停）、`[ARC]`（已归档）
 
 ## User Preferences
 
@@ -96,7 +102,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 | 横琴全空间无人体系智能数据中心 | Work | 详细设计阶段 | `AgentSystem/memory/topics/work/横琴项目.md` |
 | 工单流转系统（决策后端）| Work | 调试中（401问题）| `AgentSystem/memory/topics/work/工单流转系统.md` |
 | 2026 软考系统架构师备考 | Personal | 备考中 | `AgentSystem/memory/topics/personal/软考备考.md` |
-| 交通部第四批招聘笔试备考 | Personal | 备考中 | `AgentSystem/memory/topics/personal/交通部招聘笔试.md` |
+| 交通部第四批招聘笔试备考 | Personal | 已归档 | `AgentSystem/memory/topics/personal/交通部招聘笔试.md` |
 | 知识图谱产品手册 | Work | 知识库建设 | `AgentSystem/memory/topics/work/知识图谱产品.md` |
 
 ---

@@ -1,0 +1,94 @@
+server:
+    servlet:
+        context-path: /decision
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        druid:
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            url: jdbc:mysql://222.71.254.138:9190/decision?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+            username: deca
+            password: deca2024
+            initial-size: 10
+            max-active: 100
+            min-idle: 10
+            max-wait: 60000
+            pool-prepared-statements: true
+            max-pool-prepared-statement-per-connection-size: 20
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+            #Oracle需要打开注释
+            #validation-query: SELECT 1 FROM DUAL
+            test-while-idle: true
+            test-on-borrow: false
+            test-on-return: false
+            stat-view-servlet:
+                enabled: true
+                url-pattern: /druid/*
+                #login-username: admin
+                #login-password: admin
+            filter:
+                stat:
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: false
+                wall:
+                    config:
+                        multi-statement-allow: true
+#logging:
+#    level:
+#        root: debug
+
+user:
+    info:
+        url: http://ipaas-api.szns.gov.cn/32/user/getUserById
+    message:
+        url: http://ipaas-api.szns.gov.cn/45/wechat/sendMessage
+key:
+    monitor:
+        url: http://192.168.216.105:8000/jcfx/yjmx
+
+    user:
+        url: http://192.168.216.105:8000/zdr/tj
+    userdata:
+        url: http://192.168.216.105:8000/rkzbtj
+
+order:
+    circle:
+        url: http://nsexch.sit.sense-map.cn/order/cOrderCirculation/create
+    update:
+        url: http://nsexch.sit.sense-map.cn/order/cOrderNumberInfo/updateProcessInfo
+    download:
+        url: http://nsexch.sit.sense-map.cn/minio/download
+    order-num:
+        url: http://nsexch.sit.sense-map.cn/order/cOrderNumberRule/getNum
+    create-order:
+        url: http://nsexch.sit.sense-map.cn/order/cOrderNumberInfo/create
+    recAppCode: PANS-JCFX
+    sjfb: PANS-SJFB
+    wg: PANS-WGH
+    zfpa: PANS-ZFPA
+
+event:
+    detail:
+        url: http://nstest.sit.sense-map.cn/gridservice/datamesh-divide/eventBus/detailById
+        url1: http://ipaas-api.szns.gov.cn/83/pans/selectBaseWwytPerson/analysisStatistics/selectMaintainIssueByOrderNo
+        url2: http://10.200.25.197:8081/sjfb/apiservice/standard/eventform/getEventDetail
+
+    dynamic:
+        url: http://ipaas-api.szns.gov.cn/87/getEventList
+    access-token:
+        url: http://ipaas-oauth.szns.gov.cn/oauth2/87/access_token
+    total:
+        url: http://ipaas-api.szns.gov.cn/87/getEventDayCount
+
+decision:
+    zfpa:
+        id: 9c7a9928db2b4c0c8565fb97961477e3
+        username: 郑娜
+    sjfb:
+        id: b0e0b58001c84689bd91231f39edb332
+        username: 黄建松
+    wg:
+        id: 02b12a7625014d89b4428a6868306663
+        username: 马泽华

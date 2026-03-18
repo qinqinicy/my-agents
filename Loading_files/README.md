@@ -1,6 +1,6 @@
 # Loading_files - 引用文件仓库
 
-> 这里是 `Projects/work/` 和 `Projects/personal/` 项目产出的**原始材料**存储地。
+> 这里是上传基础资料的入口，按项目组织原始材料。
 
 ## 与项目区的映射关系
 
@@ -9,13 +9,12 @@
 | Loading_files/work/ | Projects/work/ | 状态 |
 |---------------------|----------------|------|
 | [WIP] 横琴全空间无人体系智能数据中心项目 | [WIP] 横琴全空间无人体系智能数据中心项目 | 进行中（主要项目） |
-| [ARC] 深圳市南山区委政法委项目 | [ARC] 深圳市南山区委政法委项目 | 已交付 |
 
 ### Personal (个人项目)
 
 | Loading_files/personal/ | Projects/personal/ | 状态 |
 |-------------------------|--------------------|------|
-| (空) | [OK] 交通部第四批招聘笔试备考 | 已完成 |
+| (空) | (空) | - |
 
 ## 标准目录结构
 
@@ -34,6 +33,8 @@ Loading_files/
         └── ...
 ```
 
+**注意**：只有当项目有实际文件时才会创建对应分类目录。
+
 ## 当前项目结构
 
 ### 横琴全空间无人体系智能数据中心项目
@@ -46,23 +47,13 @@ Loading_files/work/[WIP] 横琴全空间无人体系智能数据中心项目/
     └── (待添加)
 ```
 
-### 深圳市南山区委政法委项目
-
-```
-Loading_files/work/[ARC] 深圳市南山区委政法委项目/
-├── code/
-│   └── decision/          # Java 后端源码
-└── builds/
-    └── decision/
-        └── target/        # 编译产物 (decision.jar 等)
-```
-
 ## 使用说明
 
-1. **新增项目材料**：在对应项目的 `docs/` 或 `code/` 下存放
+1. **上传基础资料**：在对应项目的 `docs/` 或 `code/` 下存放原始材料
 2. **编译产物**：统一放入 `builds/` 目录，避免污染源码目录
 3. **项目关联**：每个 Loading_files 项目对应 `Projects/work/` 或 `Projects/personal/` 中的一个项目
 4. **自动整理**：通过心跳唤醒运行 `organize.py` 整理散落文件
+5. **项目索引**：查看 `Projects/PROJECTS.md` 了解所有项目的状态和映射关系
 
 ## 工作区结构
 
@@ -70,22 +61,22 @@ Loading_files/work/[ARC] 深圳市南山区委政法委项目/
 MyAgents/
 ├── AgentSystem/       # Agent 核心系统
 ├── Archives/          # 归档仓库（已交付项目归档）
-│   ├── personal/
-│   └── work/
+│   ├── ARCHIVES_LOG.md  # 归档日志
+│   ├── personal/        # 个人归档
+│   └── work/            # 工作归档
 ├── Knowledge/         # 知识库（跨项目知识沉淀）
 │   ├── personal/      # 个人知识
 │   ├── public/        # 公共知识（跨工作/个人）
 │   └── work/          # 工作知识
-├── Loading_files/     # 引用文件仓库（自动整理）
+├── Loading_files/     # 引用文件仓库（上传的基础资料）
 │   ├── personal/
 │   └── work/
 ├── Projects/          # 项目资产（状态前缀管理）
+│   ├── PROJECTS.md    # 全局项目索引
 │   ├── personal/
-│   │   ├── [OK] 已完成项目
 │   │   ├── [HLD] 暂停项目
 │   │   └── [WIP] 进行中项目
 │   └── work/
-│       ├── [OK] 已完成项目
 │       ├── [HLD] 暂停项目
 │       └── [WIP] 进行中项目
 └── SilentSpace/       # 临时工作台（每日草稿纸）
@@ -96,19 +87,23 @@ MyAgents/
 **项目状态前缀**：
 - `[WIP]` - Work In Progress，进行中
 - `[HLD]` - Hold，暂停/挂起
-- `[OK]` / `[ARC]` - 已完成/待归档
+- `[ARC]` - Archived，已归档（仅在 Archives/ 中）
 
 ## 文件流转
 
 ```
-SilentSpace/ (临时输出)
+Loading_files/（上传的基础资料）
     ↓
-Loading_files/ (整理归类)
+Projects/（建立对应项目，状态前缀管理）
     ↓
-Projects/ (状态管理)
+SilentSpace/（临时工作台，每日草稿纸）
     ↓
-Archives/ (归档) 或 Knowledge/ (沉淀)
+Archives/（项目归档）
+    ↓
+Knowledge/（知识沉淀，可复用知识）
 ```
+
+**项目同步规则**：项目名称在 `Projects/`、`Loading_files/`、`SilentSpace/`、`Archives/` 之间保持一致。修改 `Projects/` 中的项目名称后，其他位置应同步更新。
 
 ## 自动整理
 
