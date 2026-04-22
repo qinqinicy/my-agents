@@ -64,6 +64,11 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 
 - **Spring Boot JAR 打包** (2026-03-17): Nested JAR 必须使用 STORED（无压缩）模式。错误："compressed and nested jar files must be stored without compression"。解决：`zip -0` 处理 lib/*.jar，其余文件正常压缩。
 - **JWT 字段兼容性** (2026-03-17): iPaas OAuth 使用标准 JWT 字段（sub, name），代码需兼容多种字段名（userId/sub/userid, userName/name/username）。
+- **ZLMediaKit Docker 网络** (2026-04-22): Docker 容器必须使用 `--network host`，否则跨容器通信失败（"wait http response header timeout"）。
+- **ZLMediaKit addStreamProxy** (2026-04-22): 必须传 `vhost=__defaultVhost__` 参数，否则报 "Required parameter missed: vhost"。
+- **rclone serve IPv4 绑定** (2026-04-22): rclone serve 默认绑定 IPv6（`[::]:port`），需加 `--bind 0.0.0.0` 显式绑定 IPv4。
+- **rclone sync 正在录制文件** (2026-04-22): 同步正在写入的文件会报 "corrupted on transfer: sizes differ"，需排除 `.` 开头的临时文件：`--exclude "**/.*"`。
+- **StreamUI 路径问题** (2026-04-22): StreamUI 镜像内写死了 `/opt/media/bin/www`，需创建 symlink `ln -sf /opt/media/www /opt/media/bin/www`。
 
 ## Important Decisions
 
@@ -99,8 +104,8 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 ### Active Projects
 | 项目 | 类型 | 状态 | 记忆档案 |
 |------|------|------|---------|
-| 横琴全空间无人体系智能数据中心 | Work | 详细设计阶段 | `AgentSystem/memory/topics/work/横琴项目.md` |
-| 工单流转系统（决策后端）| Work | 调试中（401问题）| `AgentSystem/memory/topics/work/工单流转系统.md` |
+| 横琴全空间无人体系智能数据中心 | Work | 详细设计阶段 | `AgentSystem/memory/topics/work/横琴全空间无人体系智能数据中心.md` |
+| 视频平台运维（ZLMediaKit+MinIO）| Work | 部署完成 | `AgentSystem/memory/topics/work/视频平台运维.md` |
 | 2026 软考系统架构师备考 | Personal | 备考中 | `AgentSystem/memory/topics/personal/软考备考.md` |
 | 交通部第四批招聘笔试备考 | Personal | 已归档 | `AgentSystem/memory/topics/personal/交通部招聘笔试.md` |
 | 知识图谱产品手册 | Work | 知识库建设 | `AgentSystem/memory/topics/work/知识图谱产品.md` |
