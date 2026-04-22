@@ -69,6 +69,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - **rclone serve IPv4 绑定** (2026-04-22): rclone serve 默认绑定 IPv6（`[::]:port`），需加 `--bind 0.0.0.0` 显式绑定 IPv4。
 - **rclone sync 正在录制文件** (2026-04-22): 同步正在写入的文件会报 "corrupted on transfer: sizes differ"，需排除 `.` 开头的临时文件：`--exclude "**/.*"`。
 - **StreamUI 路径问题** (2026-04-22): StreamUI 镜像内写死了 `/opt/media/bin/www`，需创建 symlink `ln -sf /opt/media/www /opt/media/bin/www`。
+- **运维手册模板** (2026-04-22): 创建 `AgentSystem/.claude/templates/01-运维手册规范.md`，规范运维文档的内容分类（10/8章结构）、排版格式（标题层级、表格、代码块、警告提示）、HTML 转换规则（封面页、目录、样式）。适用单一大规模软件用精简8章，通用企业IT系统用完整10章。
 
 ## Important Decisions
 
