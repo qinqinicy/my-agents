@@ -2,7 +2,7 @@
 title: IoTDB时序数据库运维手册
 version: v1.0
 date: 2026-04-22
-author: 小X
+author: qin
 reviewer: 秦
 status: 正式发布
 ---

@@ -6,38 +6,39 @@
 <title>IoTDB 时序数据库运维手册 v1.0</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;color:#333;line-height:1.8;background:#f4f4f4}
-  .container{max-width:1100px;margin:0 auto;background:#fff;min-height:100vh;box-shadow:0 0 20px rgba(0,0,0,.1)}
-  .cover{background:linear-gradient(135deg,#1a3a5c 0%,#2e6da4 100%);color:#fff;padding:80px 60px;text-align:center}
+  body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;color:#2d3748;line-height:1.7;background:#fafafa}
+  .container{max-width:1100px;margin:0 auto;background:#fff;min-height:100vh;box-shadow:0 0 24px rgba(0,0,0,.08)}
+  .cover{background:linear-gradient(135deg,#3d5a6c 0%,#5b8a9a 100%);color:#fff;padding:80px 60px;text-align:center}
   .cover h1{font-size:36px;font-weight:600;margin-bottom:20px;letter-spacing:3px}
   .cover .subtitle{font-size:16px;opacity:.9;margin-bottom:40px}
   .cover .meta{font-size:12px;opacity:.7;line-height:2.2}
   .content{padding:50px 60px}
-  h1{font-size:18px;color:#1a3a5c;border-left:4px solid #2e6da4;padding-left:14px;margin:36px 0 18px;font-weight:600}
-  h2{font-size:14px;color:#2e6da4;margin:28px 0 12px;font-weight:600;border-bottom:1px solid #e8e8e8;padding-bottom:8px}
-  h3{font-size:13px;color:#4a9ede;margin:20px 0 10px}
-  h4{font-size:12px;color:#666;margin:14px 0 8px}
+  h1{font-size:18px;color:#2d3748;border-bottom:2px solid #4a90a4;padding:0 0 12px 14px;margin:40px 0 20px;font-weight:600}
+  h2{font-size:15px;color:#2d3748;border-left:4px solid #5b8a9a;padding-left:14px;margin:32px 0 16px;font-weight:600}
+  h3{font-size:13px;color:#3d5a6c;margin:22px 0 12px}
+  h4{font-size:12px;color:#4a6b7c;margin:16px 0 8px}
   p{margin:6px 0}
   .desc{color:#666;font-size:12px;margin-bottom:12px}
-  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
-  th{background:#1a3a5c;color:#fff;padding:10px 14px;text-align:left;font-weight:normal}
-  td{padding:8px 14px;border-bottom:1px solid #e0e0e0}
-  tr:nth-child(even){background:#f8fafc}
-  tr:hover{background:#f0f7ff}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px;border:1px solid #e2e8f0}
+  th{background:#edf2f7;color:#2d3748;padding:10px 14px;text-align:left;font-weight:600;border-bottom:1px solid #e2e8f0}
+  td{padding:9px 14px;border-bottom:1px solid #e2e8f0}
+  tr:nth-child(even){background:#f7fafc}
+  tr:last-child td{border-bottom:none}
   code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-family:"SF Mono",Monaco,Courier,monospace;font-size:12px;color:#c7254e}
-  pre{background:#f6f8fa;border:1px solid #e0e0e0;border-radius:6px;padding:14px 18px;margin:14px 0;overflow-x:auto;font-size:12px;line-height:1.8}
-  pre code{background:none;padding:0;color:#333}
-  .note{background:#fffbeb;border-left:3px solid #f5a623;padding:10px 14px;margin:14px 0;font-size:12px;color:#7a5a10}
-  .tip{background:#f0fbf0;border-left:3px solid #52c41a;padding:10px 14px;margin:14px 0;font-size:12px;color:#3a6b22}
-  .warning{background:#fff5f5;border-left:3px solid #ff4d4f;padding:10px 14px;margin:14px 0;font-size:12px;color:#8b0000}
+  pre{background:#f7f9fc;border:1px solid #e1e8ed;border-left:4px solid #5b8a9a;border-radius:0 8px 8px 0;padding:16px 18px;margin:14px 0;overflow-x:auto;font-size:12px;line-height:1.8}
+  pre code{background:none;padding:0;color:#2d3748}
+  .note{background:#eef6f9;border-left:4px solid #5b8a9a;padding:10px 14px;margin:14px 0;font-size:12px;color:#3d5a6c}
+  .tip{background:#f0f7f3;border-left:4px solid #5a9a7a;padding:10px 14px;margin:14px 0;font-size:12px;color:#3a6b4a}
+  .warning{background:#fef8f3;border-left:4px solid #c97d3d;padding:10px 14px;margin:14px 0;font-size:12px;color:#8b5a2b}
   .toc-item{padding:8px 0;border-bottom:1px solid #eee;font-size:13px}
-  .toc-item b{color:#1a3a5c;margin-right:8px}
+  .toc-item b{color:#3d5a6c;margin-right:8px}
   .toc-item span{color:#999;font-size:12px;margin-left:8px}
-  hr{border:none;border-top:1px solid #e0e0e0;margin:32px 0}
-  .appendix{background:#f8fafc;padding:28px;border-radius:8px;margin-top:36px}
-  .frontmatter{background:#f5f5f5;padding:20px 24px;border-radius:6px;font-size:12px;margin-bottom:28px}
-  .frontmatter table{font-size:12px}
-  .frontmatter td:first-child{width:80px;color:#666;font-weight:600}
+  hr{border:none;border-top:1px solid #e2e8f0;margin:36px 0}
+  .appendix{background:#f7fafc;padding:28px;border-radius:8px;margin-top:40px;border:1px solid #e2e8f0}
+  .frontmatter{background:#f0f4f7;padding:20px 24px;border-radius:6px;margin-bottom:28px;border:1px solid #d8e0e8}
+  .frontmatter table{font-size:12px;margin:0}
+  .frontmatter td:first-child{width:80px;color:#5b8a9a;font-weight:600}
+  .frontmatter td{border:none;padding:4px 8px}
   @media print{body{background:#fff}.container{box-shadow:none}}
 </style>
 </head>
@@ -48,7 +49,7 @@
     <div class="subtitle">横琴全空间无人体系智能数据中心项目</div>
     <div class="meta">
       版本: v1.0 | 编写日期: 2026-04-22<br>
-      作者: 小X | 审核人: 秦<br>
+      作者: qin | 审核人: 秦<br>
       状态: 正式发布
     </div>
   </div>
@@ -346,7 +347,7 @@ VALUES (1776747236000, 'D0101209', 22.1, 113.5),
   "measurements": ["s1", "s2"],
   "values": [0.530635, 0.530635]
 }</code></pre>
-    <div class="warning"><strong>警告</strong>：IoTDB 2.0.7 内置 MQTT 不支持普通 flat JSON，必须使用 <code>device/measurements/values</code> 数组格式。</div>
+    <div class="note"><strong>注意</strong>：IoTDB 2.0.7 内置 MQTT 不支持普通 flat JSON，必须使用 <code>device/measurements/values</code> 数组格式。</div>
 
     <h2>5.3 MQTTX 连接配置</h2>
     <table>
@@ -573,8 +574,8 @@ df -h /data/iotdb/</code></pre>
     <h2>10.1 版本历史</h2>
     <table>
       <tr><th>版本</th><th>日期</th><th>作者</th><th>变更内容</th></tr>
-      <tr><td>v1.0</td><td>2026-04-22</td><td>小X</td><td>初始版本，基于规范模板重写</td></tr>
-      <tr><td>v0.1</td><td>2026-04-21</td><td>小X</td><td>初始版本（按旧格式输出）</td></tr>
+      <tr><td>v1.0</td><td>2026-04-22</td><td>qin</td><td>初始版本，基于规范模板重写</td></tr>
+      <tr><td>v0.1</td><td>2026-04-21</td><td>qin</td><td>初始版本（按旧格式输出）</td></tr>
     </table>
 
   </div>
