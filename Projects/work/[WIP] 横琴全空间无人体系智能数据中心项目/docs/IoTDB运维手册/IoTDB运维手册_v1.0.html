@@ -6,40 +6,41 @@
 <title>IoTDB 时序数据库运维手册 v1.0</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;color:#2d3748;line-height:1.7;background:#fafafa}
-  .container{max-width:1100px;margin:0 auto;background:#fff;min-height:100vh;box-shadow:0 0 24px rgba(0,0,0,.08)}
-  .cover{background:linear-gradient(135deg,#3d5a6c 0%,#5b8a9a 100%);color:#fff;padding:80px 60px;text-align:center}
-  .cover h1{font-size:36px;font-weight:600;margin-bottom:20px;letter-spacing:3px}
-  .cover .subtitle{font-size:16px;opacity:.9;margin-bottom:40px}
-  .cover .meta{font-size:12px;opacity:.7;line-height:2.2}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;font-size:14px;color:#333;line-height:1.8;background:#fafafa}
+  .container{max-width:1000px;margin:0 auto;background:#fff;min-height:100vh;box-shadow:0 0 20px rgba(0,0,0,.08)}
+  .cover{background:linear-gradient(135deg,#1976d2,#1565c0);color:#fff;padding:70px 50px;text-align:center;border-radius:8px 8px 0 0}
+  .cover h1{font-size:32px;font-weight:600;margin-bottom:16px;letter-spacing:2px;text-shadow:0 2px 4px rgba(0,0,0,.2)}
+  .cover .subtitle{font-size:16px;opacity:.95;margin-bottom:36px}
+  .cover .meta{font-size:12px;opacity:.8;line-height:2.2}
   .content{padding:50px 60px}
-  h1{font-size:18px;color:#2d3748;border-bottom:2px solid #4a90a4;padding:0 0 12px 14px;margin:40px 0 20px;font-weight:600}
-  h2{font-size:15px;color:#2d3748;border-left:4px solid #5b8a9a;padding-left:14px;margin:32px 0 16px;font-weight:600}
-  h3{font-size:13px;color:#3d5a6c;margin:22px 0 12px}
-  h4{font-size:12px;color:#4a6b7c;margin:16px 0 8px}
+  h1{font-size:18px;color:#fff;background:#1976d2;padding:14px 20px;border-radius:8px;margin:36px 0 20px;font-weight:600;box-shadow:0 2px 8px rgba(25,118,210,.3)}
+  h2{font-size:15px;color:#fff;background:#1976d2;padding:10px 16px;border-radius:0;margin:28px 0 14px;font-weight:600;border-left:6px solid #0d47a1}
+  h3{font-size:13px;color:#424242;margin:20px 0 10px;padding-left:10px;border-left:3px solid #1976d2}
+  h4{font-size:12px;color:#616161;margin:14px 0 8px}
   p{margin:6px 0}
   .desc{color:#666;font-size:12px;margin-bottom:12px}
-  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px;border:1px solid #e2e8f0}
-  th{background:#edf2f7;color:#2d3748;padding:10px 14px;text-align:left;font-weight:600;border-bottom:1px solid #e2e8f0}
-  td{padding:9px 14px;border-bottom:1px solid #e2e8f0}
-  tr:nth-child(even){background:#f7fafc}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px;background:#fff;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+  th{background:#1976d2;color:#fff;padding:11px 15px;text-align:left;font-weight:600}
+  td{padding:10px 15px;border-bottom:1px solid #eee}
+  tr:hover{background:#f5f5f5}
   tr:last-child td{border-bottom:none}
-  code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-family:"SF Mono",Monaco,Courier,monospace;font-size:12px;color:#c7254e}
-  pre{background:#f7f9fc;border:1px solid #e1e8ed;border-left:4px solid #5b8a9a;border-radius:0 8px 8px 0;padding:16px 18px;margin:14px 0;overflow-x:auto;font-size:12px;line-height:1.8}
-  pre code{background:none;padding:0;color:#2d3748}
-  .note{background:#eef6f9;border-left:4px solid #5b8a9a;padding:10px 14px;margin:14px 0;font-size:12px;color:#3d5a6c}
-  .tip{background:#f0f7f3;border-left:4px solid #5a9a7a;padding:10px 14px;margin:14px 0;font-size:12px;color:#3a6b4a}
-  .warning{background:#fef8f3;border-left:4px solid #c97d3d;padding:10px 14px;margin:14px 0;font-size:12px;color:#8b5a2b}
+  code{background:#f4f4f4;padding:2px 6px;border-radius:3px;font-family:Consolas,Monaco,monospace;font-size:12px;color:#d63384}
+  pre{background:#263238;border-radius:6px;padding:16px 20px;margin:14px 0;overflow-x:auto;font-size:13px;line-height:1.5}
+  pre code{background:none;padding:0;color:#aed581;border-radius:0}
+  .note{background:#e3f2fd;border-left:4px solid #1976d2;padding:10px 14px;margin:14px 0;font-size:12px;color:#0d47a1;border-radius:0 4px 4px 0}
+  .tip{background:#e8f5e9;border-left:4px solid #4caf50;padding:10px 14px;margin:14px 0;font-size:12px;color:#2e7d32;border-radius:0 4px 4px 0}
+  .warning{background:#fff3cd;border-left:4px solid #ffc107;padding:10px 14px;margin:14px 0;font-size:12px;color:#f57f17;border-radius:0 4px 4px 0}
   .toc-item{padding:8px 0;border-bottom:1px solid #eee;font-size:13px}
-  .toc-item b{color:#3d5a6c;margin-right:8px}
+  .toc-item b{color:#1976d2;margin-right:8px}
   .toc-item span{color:#999;font-size:12px;margin-left:8px}
-  hr{border:none;border-top:1px solid #e2e8f0;margin:36px 0}
-  .appendix{background:#f7fafc;padding:28px;border-radius:8px;margin-top:40px;border:1px solid #e2e8f0}
-  .frontmatter{background:#f0f4f7;padding:20px 24px;border-radius:6px;margin-bottom:28px;border:1px solid #d8e0e8}
-  .frontmatter table{font-size:12px;margin:0}
-  .frontmatter td:first-child{width:80px;color:#5b8a9a;font-weight:600}
+  hr{border:none;border-top:1px solid #eee;margin:32px 0}
+  .appendix{background:#f9f9f9;padding:28px;border-radius:8px;margin-top:40px;border:1px solid #e0e0e0}
+  .frontmatter{background:#f5f5f5;padding:20px 24px;border-radius:6px;margin-bottom:28px}
+  .frontmatter table{font-size:12px;margin:0;background:transparent;box-shadow:none}
+  .frontmatter td:first-child{width:80px;color:#1976d2;font-weight:600}
   .frontmatter td{border:none;padding:4px 8px}
-  @media print{body{background:#fff}.container{box-shadow:none}}
+  .footer{text-align:center;color:#999;font-size:11px;padding:20px;border-top:1px solid #eee;margin-top:40px}
+  @media print{body{background:#fff}.container{box-shadow:none}.cover{border-radius:0}}
 </style>
 </head>
 <body>
@@ -55,7 +56,7 @@
   </div>
   <div class="content">
 
-    <h1>目  录</h1>
+    <h1 style="background:#fff;color:#1976d2;border-bottom:3px solid #1976d2;border-radius:0;box-shadow:none;text-align:center;padding:14px">目  录</h1>
     <div class="toc-item"><b>1.</b> 概述 <span>1.1-1.4</span></div>
     <div class="toc-item"><b>2.</b> 系统架构 <span>2.1-2.4</span></div>
     <div class="toc-item"><b>3.</b> 安装配置 <span>3.1-3.3</span></div>
@@ -231,7 +232,7 @@ data_region_port=10760</code></pre>
     <pre><code>$IOTDB_HOME/sbin/start-cli.sh -h 10.129.80.142 -p 6667 -u root -pw root</code></pre>
     <p><strong>快捷执行</strong>：</p>
     <pre><code>$IOTDB_HOME/sbin/start-cli.sh -h 10.129.80.142 -p 6667 -u root -pw root -e "SHOW DATABASES"</code></pre>
-    <div class="tip"><strong>提示</strong>：默认用户名/密码为 root/root，生产环境请修改。</div>
+    <div class="note"><strong>注意</strong>：默认用户名/密码为 root/root，生产环境请修改。</div>
 
     <h2>4.2 存储组管理</h2>
     <p><strong>创建存储组</strong>：</p>
@@ -377,7 +378,7 @@ SET DEVICE TEMPLATE yyzx_template TO root.yyzx.device</code></pre>
     <p><strong>智慧灯杆快速配置</strong>：</p>
     <pre><code>-- 创建存储组
 CREATE DATABASE root.zhdg</code></pre>
-    <div class="tip"><strong>提示</strong>：MQTT 消息中的 device 字段需与存储组路径对应，如 <code>root.yyzx.device</code>。</div>
+    <div class="note"><strong>注意</strong>：MQTT 消息中的 device 字段需与存储组路径对应，如 <code>root.yyzx.device</code>。</div>
 
     <hr>
 
@@ -433,7 +434,7 @@ SELECT * FROM root.cszl.uav INTO OUTFILE '/tmp/backup.csv'</code></pre>
     <p><strong>导入数据（CLI）</strong>：</p>
     <pre><code># 从文件导入
 LOAD '/tmp/backup.csv' INTO root.cszl.uav</code></pre>
-    <div class="tip"><strong>提示</strong>：生产环境建议使用集群备份工具或定期快照。</div>
+    <div class="note"><strong>注意</strong>：生产环境建议使用集群备份工具或定期快照。</div>
 
     <h2>7.2 数据过期策略</h2>
     <p><strong>设置 TTL（毫秒）</strong>：</p>
@@ -574,9 +575,12 @@ df -h /data/iotdb/</code></pre>
     <h2>10.1 版本历史</h2>
     <table>
       <tr><th>版本</th><th>日期</th><th>作者</th><th>变更内容</th></tr>
-      <tr><td>v1.0</td><td>2026-04-22</td><td>qin</td><td>初始版本，基于规范模板重写</td></tr>
-      <tr><td>v0.1</td><td>2026-04-21</td><td>qin</td><td>初始版本（按旧格式输出）</td></tr>
+      <tr><td>v1.0</td><td>2026-04-22</td><td>qin</td><td>初始版本，按规范模板生成</td></tr>
     </table>
+
+    <div class="footer">
+      本手册由 IoTDB 集群运维经验总结生成，适用于横琴全空间无人体系智能数据中心项目。
+    </div>
 
   </div>
 </div>
