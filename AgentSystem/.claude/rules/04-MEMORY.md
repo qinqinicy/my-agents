@@ -57,6 +57,11 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
   - `Projects/` 下使用状态前缀管理项目：`[WIP]` 进行中、`[HLD]` 暂停；已完成项目直接归档至 `Archives/`
   - 文件流转：`Loading_files/`（基础资料）→ `Projects/`（项目管理）→ `SilentSpace/`（临时工作台）→ `Archives/`（归档）→ `Knowledge/`（沉淀）
   - 项目索引：`Projects/PROJECTS.md` 维护全局项目清单和映射关系
+- **工作区配置统一** (2026-04-23):
+  - 根目录 `.claude` 符号链接指向 `AgentSystem/.claude/`，统一维护一份配置
+  - `myagents_files/` 更名为 `Outputs/`，明确输出文档位置
+  - `Projects/work/` 项目内部结构统一为 `docs/{设计,运维,平台,其他}/` 子分类
+  - 孔明平台作为横琴项目的子平台，不再是独立项目
 
 ### Communication
 
@@ -91,6 +96,10 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
   - 创建 `Projects/PROJECTS.md` 全局项目索引，维护所有项目状态和映射关系
   - 创建 `Archives/ARCHIVES_LOG.md` 归档日志，记录归档详情和知识沉淀路径
   - 项目状态前缀统一：`[WIP]`（进行中）、`[HLD]`（暂停）、`[ARC]`（已归档）
+- **Outputs 目录与 Work 项目结构** (2026-04-23):
+  - `myagents_files/` → `Outputs/`，Agent 生成输出放此目录
+  - `Projects/work/` 项目内部统一为 `docs/{设计,运维,平台,其他}/` 子分类
+  - 孔明平台并入横琴项目作为子平台 `docs/平台/孔明/`
 
 ## User Preferences
 
