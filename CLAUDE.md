@@ -214,6 +214,12 @@ Knowledge/（知识沉淀，可复用知识）
 
 **项目同步规则**：项目名称在 `Projects/`、`Loading_files/`、`SilentSpace/`、`Archives/` 之间保持一致。
 
+### myagents_files 自动处理
+
+MyAgents 应用会将上传文件放到 `myagents_files/`（不可配置）。
+
+**规则**：发现 `myagents_files/` 有新文件时，自动移动到 `Loading_files/`（用户上传材料）或 `Outputs/`（Agent 生成文档），然后删除空目录。
+
 ---
 
 ### 新项目检查的静默规则
