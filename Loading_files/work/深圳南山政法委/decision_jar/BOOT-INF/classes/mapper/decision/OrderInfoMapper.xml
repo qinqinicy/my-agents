@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sqx.modules.decision.dao.OrderInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.sqx.modules.decision.entity.OrderInfo" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="event_uuid" property="eventUuid" jdbcType="VARCHAR" />
+    <result column="order_num" property="orderNum" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="send_app_code" property="sendAppCode" jdbcType="VARCHAR" />
+    <result column="rec_app_code" property="recAppCode" jdbcType="VARCHAR" />
+    <result column="sender_id" property="senderId" jdbcType="VARCHAR" />
+    <result column="send_time" property="sendTime" jdbcType="VARCHAR" />
+    <result column="event_code" property="eventCode" jdbcType="VARCHAR" />
+    <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
+    <result column="user_type" property="userType" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="contact_no" property="contactNo" jdbcType="VARCHAR" />
+    <result column="event_content" property="eventContent" jdbcType="VARCHAR" />
+    <result column="address_code" property="addressCode" jdbcType="VARCHAR" />
+    <result column="data_package" property="dataPackage" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <select id="selectAppCode" resultType="com.sqx.modules.decision.entity.third.AppCodeInfo">
+    SELECT
+      oi.send_app_code,
+      ei.order_num,
+      ei.event_uuid
+    FROM
+      event_info ei
+        LEFT JOIN order_info oi ON oi.matter_uuid = ei.matter_uuid
+    WHERE
+      ei.id = #{id}
+    ORDER BY oi.id DESC
+  </select>
+</mapper>
