@@ -73,8 +73,14 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - **ZLMediaKit addStreamProxy** (2026-04-22): 必须传 `vhost=__defaultVhost__` 参数，否则报 "Required parameter missed: vhost"。
 - **rclone serve IPv4 绑定** (2026-04-22): rclone serve 默认绑定 IPv6（`[::]:port`），需加 `--bind 0.0.0.0` 显式绑定 IPv4。
 - **rclone sync 正在录制文件** (2026-04-22): 同步正在写入的文件会报 "corrupted on transfer: sizes differ"，需排除 `.` 开头的临时文件：`--exclude "**/.*"`。
+- **ZLM FFmpegSource fork 失效** (2026-04-24): ZLM 在 Docker + seccomp=2 下无法 spawn FFmpeg 进程，addFFmpegSource 返回成功但日志静默。换用 SRS 5.0 ingest 功能替代。
+- **SRS ingest 拉流** (2026-04-24): SRS 内置 ingest 调用容器内 ffmpeg 拉取外部 RTMP 源，可替代 ZLM addStreamProxy。配置简单，稳定可靠。
 - **StreamUI 路径问题** (2026-04-22): StreamUI 镜像内写死了 `/opt/media/bin/www`，需创建 symlink `ln -sf /opt/media/www /opt/media/bin/www`。
+- **ZLM addStreamProxy RTMP 限制** (2026-04-23): ZLM addStreamProxy 对部分 RTMP URL 格式校验严格，无法直接拉取时用 ffmpeg 中转方案：ffmpeg 拉取外部 RTMP → 推送 `rtmp://127.0.0.1/live/{stream}` → ZLM 接收录制。systemd 服务管理 ffmpeg，确保断线自动重启。
 - **运维手册模板** (2026-04-22): 创建 `AgentSystem/.claude/templates/01-运维手册规范.md`，规范运维文档的内容分类（10/8章结构）、排版格式（标题层级、表格、代码块、警告提示）、HTML 转换规则（封面页、目录、样式）。适用单一大规模软件用精简8章，通用企业IT系统用完整10章。
+- **Oryx start_redis 递归问题** (2026-04-27): Oryx 容器内 `auto/start_redis` 被 bootstrap 调用，不能用 `exec bootstrap` 替换进程，否则递归调用。正确做法：加载环境变量后直接返回。
+- **Oryx load_env 不存在** (2026-04-27): Oryx 容器内 `auto/load_env` 文件不存在，实际从 `containers/data/config/.env` 读取环境变量。
+- **Oryx 8080 端口 errno=98** (2026-04-27): Oryx Go 服务绑定 0.0.0.0:8080 失败，ss 显示无占用但实际 bind 失败，可能与容器网络模式或 SRS 残留进程有关。
 
 ## Important Decisions
 
@@ -115,7 +121,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 | 项目 | 类型 | 状态 | 记忆档案 |
 |------|------|------|---------|
 | 横琴全空间无人体系智能数据中心 | Work | 详细设计阶段 | `AgentSystem/memory/topics/work/横琴全空间无人体系智能数据中心.md` |
-| 视频平台运维（ZLMediaKit+MinIO）| Work | 部署完成 | `AgentSystem/memory/topics/work/视频平台运维.md` |
+| 视频平台运维（SRS+MinIO）| Work | 迁移完成 | `AgentSystem/memory/topics/work/视频平台运维.md` |
 | 2026 软考系统架构师备考 | Personal | 备考中 | `AgentSystem/memory/topics/personal/软考备考.md` |
 | 交通部第四批招聘笔试备考 | Personal | 已归档 | `AgentSystem/memory/topics/personal/交通部招聘笔试.md` |
 | 知识图谱产品手册 | Work | 知识库建设 | `AgentSystem/memory/topics/work/知识图谱产品.md` |
