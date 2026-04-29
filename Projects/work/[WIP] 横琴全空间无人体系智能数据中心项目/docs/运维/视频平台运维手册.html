@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>视频平台运维手册 v1.9</title>
+<title>视频平台运维手册 v2.0</title>
 <style>
     body {
         font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", "思源黑体", sans-serif;
@@ -258,7 +258,7 @@
 <div class="cover-header">
     <div class="cover-title">视频平台运维手册</div>
     <div class="cover-subtitle">横琴全空间无人体系智能数据中心项目</div>
-    <div class="cover-info">版本: v1.9 | 编写日期: 2026-04-23</div>
+    <div class="cover-info">版本: v2.0 | 编写日期: 2026-04-29</div>
     <div class="cover-info">作者: 秦 | 审核人: 秦</div>
     <div class="cover-info">状态: 正式发布</div>
 </div>
@@ -296,6 +296,7 @@
 <tr><td>v1.7</td><td>2026-04-23</td><td>秦</td><td>按规范模板更新：目录改用 .toc 结构（白底卡片式）</td></tr>
 <tr><td>v1.8</td><td>2026-04-23</td><td>秦</td><td>按规范模板更新：目录标题独立 h1 样式（白底蓝字下划线）</td></tr>
 <tr><td>v1.9</td><td>2026-04-23</td><td>秦</td><td>按规范模板更新：body 背景改为 #fafafa</td></tr>
+<tr><td>v2.0</td><td>2026-04-29</td><td>秦</td><td><strong>重大更新</strong>：流命名规范化（machinenest/drone/5gacamera），录制路径改为 {场景}/{流ID} 结构，rclone sync 改为按场景自动分流脚本</td></tr>
 </table>
 </div>
 
@@ -677,17 +678,28 @@ Content-Type: application/json</code></pre>
 
 <h3>请求示例</h3>
 
+<p><strong>场景：cszl（城市治理）</strong></p>
+
 <pre><code>curl -X POST "http://10.129.80.242:80/index/api/addStreamProxy" \
   -H "Content-Type: application/json" \
   -d '{
     "secret": "mysecret123",
     "vhost": "__defaultVhost__",
-    "app": "live",
-    "stream": "cszl",
-    "url": "rtmp://10.129.80.244:21021/live/cszl",
+    "app": "cszl",
+    "stream": "machinenest",
+    "url": "http://10.129.80.244:21021/apron/UA004768282.flv?eip=10.128.131.250&token=1775546994-NULL-5CA507286EEB7CE9DE157E0F7F136E2F-FLY&vhost=saveVhost",
     "enable_hls": true,
     "enable_mp4": true
   }'</code></pre>
+
+<p><strong>流命名规范</strong>：</p>
+
+<table>
+<tr><th>流 ID</th><th>内容</th><th>源地址</th></tr>
+<tr><td>machinenest</td><td>机巢</td><td>http://10.129.80.244:21021/apron/UA004768282.flv?...（带 token）</td></tr>
+<tr><td>drone</td><td>无人机</td><td>http://10.129.23.244:21021/uav/D0101206.flv?...（带 token）</td></tr>
+<tr><td>5gacamera</td><td>5G-A基站摄像头</td><td>rtmp://10.129.80.244/proxy_example</td></tr>
+</table>
 
 <h3>常见错误</h3>
 
@@ -716,6 +728,20 @@ Content-Type: application/json</code></pre>
 <li>录像目录出现 .ts 或 .mp4 文件</li>
 <li><code>curl -s "http://127.0.0.1:80/index/api/getMediaList?secret=mysecret123"</code> 显示录制中的流</li>
 </ul>
+
+<h3>录制路径结构</h3>
+
+<p><strong>本地录制路径</strong>：<code>/opt/media/www/record/{场景}/{流ID}/</code></p>
+
+<pre><code>/opt/media/www/record/
+└── cszl/                    # 场景名（应用名）
+    ├── machinenest/          # 机巢流
+    │   └── 2026-04-28/      # 按日期分目录
+    │       └── *.mp4
+    ├── drone/               # 无人机流
+    │   └── 2026-04-28/
+    └── 5gacamera/           # 5G-A摄像头流
+        └── 2026-04-28/</code></pre>
 
 <h3>HLS 连续录制配置</h3>
 
@@ -763,38 +789,63 @@ mp4_max_size=100      # 单个 MP4 文件最大大小（MB）</code></pre>
 <li>同步日志无错误</li>
 </ul>
 
-<h3>sync_to_minio.sh 脚本</h3>
+<h3>sync_by_scene.sh 脚本</h3>
 
 <pre><code>#!/bin/bash
-# 录像同步到 MinIO 脚本
-# 位置：/opt/media/tools/sync_to_minio.sh
+set -e
 
-SRC="/opt/media/www/record"
 LOG="/opt/media/logs/sync.log"
-DATE=$(date '+%Y-%m-%d %H:%M:%S')
+SRC_DIR="/opt/media/www/record"
 
 log() {
-    echo "[$DATE] $1" | tee -a "$LOG"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG"
 }
 
-log "=== 开始同步录像到 MinIO ==="
+RCLONE="/opt/media/tools/rclone"
 
-/opt/media/tools/rclone sync "$SRC" minio:cszl-media/cszl/ \
-    --exclude "**/.*" \
-    --transfers 4 \
-    --checkers 8 \
-    --log-level INFO \
-    -P 2>&1 | tee -a "$LOG"
+for scene_dir in "$SRC_DIR"/*/; do
+    [[ -d "$scene_dir" ]] || continue
+    scene=$(basename "$scene_dir")
 
-RESULT=$?
-if [ $RESULT -eq 0 ]; then
-    log "同步成功完成"
-else
-    log "同步失败，退出码: $RESULT"
-fi
+    # 跳过非场景目录
+    if [[ "$scene" == "live" ]] || [[ "$scene" == "proxy_example" ]]; then
+        continue
+    fi
 
-log "=== 同步任务结束 ==="
-echo "" >> "$LOG"</code></pre>
+    # 检查桶是否存在
+    if ! $RCLONE ls "minio:${scene}-media/" --max-depth 0 &>/dev/null; then
+        log "WARNING: Bucket ${scene}-media not found, skipping sync"
+        continue
+    fi
+
+    log "=== Syncing scene: $scene ==="
+    $RCLONE sync "$scene_dir" "minio:${scene}-media/" \
+        --exclude "**/.*" \
+        --transfers 4 \
+        --checkers 8 \
+        --log-level INFO \
+        -P \
+        2>&1 | tee -a "$LOG"
+
+    log "=== Done: $scene ==="
+done</code></pre>
+
+<p><strong>同步逻辑</strong>：</p>
+<ul>
+<li>遍历 <code>/opt/media/www/record/</code> 下所有场景目录</li>
+<li>跳过 <code>live</code>、<code>proxy_example</code> 等非场景目录</li>
+<li>检查 MinIO 桶是否存在，不存在则跳过（不报错）</li>
+<li>同步到对应桶：<code>minio:{场景}-media/{场景}/</code></li>
+</ul>
+
+<p><strong>路径映射</strong>：</p>
+
+<table>
+<tr><th>本地路径</th><th>MinIO 路径</th></tr>
+<tr><td>/opt/media/www/record/cszl/machinenest/</td><td>cszl-media/cszl/machinenest/</td></tr>
+<tr><td>/opt/media/www/record/cszl/drone/</td><td>cszl-media/cszl/drone/</td></tr>
+<tr><td>/opt/media/www/record/cszl/5gacamera/</td><td>cszl-media/cszl/5gacamera/</td></tr>
+</table>
 
 <h3>定时任务配置</h3>
 
@@ -802,7 +853,7 @@ echo "" >> "$LOG"</code></pre>
 crontab -e
 
 # 内容：
-*/5 * * * * /opt/media/tools/sync_to_minio.sh >> /opt/media/logs/cron_sync.log 2>&1</code></pre>
+*/5 * * * * /opt/media/tools/sync_by_scene.sh >> /opt/media/logs/sync.log 2>&1</code></pre>
 
 <h3>手动执行</h3>
 
@@ -904,6 +955,42 @@ EOF
 systemctl daemon-reload
 systemctl enable rclone-yyzx
 systemctl start rclone-yyzx</code></pre>
+
+<h2>5.4 新增场景流程</h2>
+
+<p><strong>适用场景</strong>：新增一个视频监控场景（如 yyzx 运营中心），包含多个摄像头/无人机/机巢等流。</p>
+
+<p><strong>新增步骤</strong>：</p>
+
+<ol>
+<li><strong>ZLM Web 添加流</strong>：
+  <ul>
+    <li>应用名：场景名（如 <code>yyzx</code>）</li>
+    <li>流ID：按内容命名（如 <code>camera01</code>、<code>drone01</code>）</li>
+    <li>源地址：对应的拉流 URL</li>
+  </ul>
+</li>
+<li><strong>MinIO 创建桶</strong>：
+  <pre><code># 在 MinIO 服务器上
+/root/mc mb minio/yyzx-media --ignore-existing</code></pre>
+</li>
+<li><strong>自动同步</strong>：
+  <ul>
+    <li>无需修改 sync_by_scene.sh 脚本</li>
+    <li>下次 cron 执行时自动检测到新目录并同步</li>
+    <li>桶不存在则跳过，不报错</li>
+  </ul>
+</li>
+</ol>
+
+<p><strong>示例：新增 yyzx 场景</strong>：</p>
+
+<table>
+<tr><th>步骤</th><th>操作</th><th>结果</th></tr>
+<tr><td>1</td><td>ZLM 添加 <code>yyzx/camera01</code></td><td>本地 <code>/opt/media/www/record/yyzx/camera01/</code></td></tr>
+<tr><td>2</td><td>MinIO 创建 <code>yyzx-media</code> 桶</td><td>桶就绪</td></tr>
+<tr><td>3</td><td>cron 自动同步</td><td><code>yyzx-media/yyzx/camera01/</code></td></tr>
+</table>
 
 ---
 
@@ -1117,7 +1204,7 @@ docker run -d --name zlm --network host \
 <ol>
 <li>检查 rclone 服务：<code>systemctl status rclone-minio</code></li>
 <li>检查同步日志：<code>tail /opt/media/logs/sync.log</code></li>
-<li>手动执行同步测试：<code>/opt/media/tools/sync_to_minio.sh</code></li>
+<li>手动执行同步测试：<code>/opt/media/tools/sync_by_scene.sh</code></li>
 </ol>
 
 <h3>Q4: 第三方无法访问视频</h3>
