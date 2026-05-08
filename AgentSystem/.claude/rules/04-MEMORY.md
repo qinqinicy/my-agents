@@ -82,6 +82,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - **Oryx load_env 不存在** (2026-04-27): Oryx 容器内 `auto/load_env` 文件不存在，实际从 `containers/data/config/.env` 读取环境变量。
 - **Oryx 8080 端口 errno=98** (2026-04-27): Oryx Go 服务绑定 0.0.0.0:8080 失败，ss 显示无占用但实际 bind 失败，可能与容器网络模式或 SRS 残留进程有关。**方案搁置，用户回归 ZLM + StreamUI**。
 - **IoTDB 时序路径命名** (2026-05-08): 存储组/场景/数据表三级结构，如 root.dhq.ugv_status、root.jincheng.device
+- **腾讯云 WireGuard 防火墙** (2026-05-08): 云服务器有 YJ-FIREWALL-INPUT 自定义链，默认 DROP；放行 UDP 1194 需 `iptables -I YJ-FIREWALL-INPUT 1 -p udp --dport 1194 -j ACCEPT`；MASQUERADE 需手动添加
 - **IoTDB CLI 多语句执行** (2026-05-08): CLI 的 `-e` 参数内多语句用分号分隔，整个 SQL 字符串用双引号包裹
 - **流命名规范化** (2026-04-29): machinenest（机巢）、drone（无人机）、5gacamera（5G-A摄像头），录制路径 `{场景}/{流ID}/`
 - **rclone sync 按场景分流** (2026-04-29): sync_by_scene.sh 遍历场景目录，检查桶存在性后同步到 `minio:{scene}-media/`
@@ -135,6 +136,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - **流命名规范化** (2026-04-29): machinenest/drone/5gacamera，录制路径 {场景}/{流ID}/，rclone sync 按场景分流
 - **MinIO IAM** (2026-04-29): cszlkey 只读访问 cszl-media，S3 API 对外服务
 - **IoTDB 场景接入** (2026-05-08): 大横琴无人车(root.dhq, 48时序)、金城无人机(root.jincheng, 17时序)
+- **WireGuard VPN 部署** (2026-05-08): 腾讯云 129.204.87.213 WireGuard 已安装，Mac 客户端已连接但 ping 不通，排查中
 
 ---
 
