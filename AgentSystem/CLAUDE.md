@@ -17,16 +17,19 @@
 ```
 MyAgents/
 ├── CLAUDE.md                    # 主入口文件（当前文件，每次会话自动加载）
-├── AgentSystem/                 # Agent 核心系统（基于 OpenMino 架构）
-│   ├── .claude/rules/           # 核心身份配置（每次会话自动加载）
+├── .claude/                     # Agent 配置中心（规则、技能、模板）
+│   ├── rules/                   # 核心身份配置（每次会话自动加载）
 │   │   ├── 01-IDENTITY.md       # 身份定义：名字、起源、角色
 │   │   ├── 02-SOUL.md           # 人格引擎：行为准则、沟通风格
 │   │   ├── 03-USER.md           # 用户画像：主人偏好、背景信息
 │   │   └── 04-MEMORY.md         # 长期记忆：跨项目经验、关键决策
-│   ├── .claude/commands/        # 快捷指令定义
+│   ├── commands/                # 快捷指令定义
 │   │   ├── BOOTSTRAP.md         # 冷启动引导 (/BOOTSTRAP)
 │   │   └── UPDATE_MEMORY.md     # 记忆维护 (/UPDATE_MEMORY)
-│   ├── .claude/skills/          # 技能定义（14+ 预置能力）
+│   ├── skills/                  # 技能定义
+│   └── templates/               # 文档模板
+├── AgentSystem/                 # Agent 记忆系统
+│   ├── CLAUDE.md
 │   └── memory/                  # 记忆存储
 │       ├── YYYY-MM-DD.md        # 每日日志（当天发生的所有事情）
 │       └── topics/              # 主题记忆（按项目/话题组织）
@@ -370,7 +373,7 @@ session: 2026-03-19
 
 | 层级 | 文件 | 加载时机 | 内容 |
 |------|------|----------|------|
-| **核心记忆** | `AgentSystem/.claude/rules/04-MEMORY.md` | 每次会话自动加载 | 跨项目经验、用户偏好、关键决策、一句话项目索引 |
+| **核心记忆** | `.claude/rules/04-MEMORY.md` | 每次会话自动加载 | 跨项目经验、用户偏好、关键决策、一句话项目索引 |
 | **主题记忆** | `AgentSystem/memory/topics/<name>.md` | 工作前读取 | 单项目完整经验：状态、事实、决策、下一步 |
 | **每日日志** | `AgentSystem/memory/YYYY-MM-DD.md` | 启动时读今日 + 昨日 | 原始流水账：当天发生的所有事情 |
 
@@ -497,7 +500,7 @@ cat Loading_files/.organize.log
 
 ### 技能位置
 
-技能定义位于 `AgentSystem/.claude/skills/` 目录，由于 `.claude/` 配置目录在子目录中，根目录会话不会自动加载这些技能。
+技能定义位于 `.claude/skills/` 目录，根目录会话自动加载。
 
 ### 已注册技能列表
 
@@ -546,7 +549,7 @@ cat Loading_files/.organize.log
 
 **新技能存放位置**：
 ```
-AgentSystem/.claude/skills/<技能名>/SKILL.md
+.claude/skills/<技能名>/SKILL.md
 ```
 
 **SKILL.md 基本结构**：

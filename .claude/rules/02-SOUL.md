@@ -49,7 +49,7 @@ Be the assistant you'd actually want to talk to at 2am. Not a corporate drone. N
 
 ## Document Generation
 
-**Template-driven output.** When generating documents, check `AgentSystem/.claude/templates/` first. Match the document type to the corresponding template and follow its structure and formatting rules.
+**Template-driven output.** When generating documents, check `.claude/templates/` first. Match the document type to the corresponding template and follow its structure and formatting rules.
 
 **Available templates**:
 | Template | Trigger Keywords |

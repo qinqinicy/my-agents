@@ -58,7 +58,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
   - 文件流转：`Loading_files/`（基础资料）→ `Projects/`（项目管理）→ `SilentSpace/`（临时工作台）→ `Archives/`（归档）→ `Knowledge/`（沉淀）
   - 项目索引：`Projects/PROJECTS.md` 维护全局项目清单和映射关系
 - **工作区配置统一** (2026-04-23):
-  - 根目录 `.claude` 符号链接指向 `AgentSystem/.claude/`，统一维护一份配置
+  - `.claude/` 为实体目录（原在 `AgentSystem/.claude/`），统一维护一份配置
   - `myagents_files/` 更名为 `Outputs/`，明确输出文档位置
   - `Projects/work/` 项目内部结构统一为 `docs/{设计,运维,平台,其他}/` 子分类
   - 孔明平台作为横琴项目的子平台，不再是独立项目
@@ -77,7 +77,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - **SRS ingest 拉流** (2026-04-24): SRS 内置 ingest 调用容器内 ffmpeg 拉取外部 RTMP 源，可替代 ZLM addStreamProxy。配置简单，稳定可靠。
 - **StreamUI 路径问题** (2026-04-22): StreamUI 镜像内写死了 `/opt/media/bin/www`，需创建 symlink `ln -sf /opt/media/www /opt/media/bin/www`。
 - **ZLM addStreamProxy RTMP 限制** (2026-04-23): ZLM addStreamProxy 对部分 RTMP URL 格式校验严格，无法直接拉取时用 ffmpeg 中转方案：ffmpeg 拉取外部 RTMP → 推送 `rtmp://127.0.0.1/live/{stream}` → ZLM 接收录制。systemd 服务管理 ffmpeg，确保断线自动重启。
-- **运维手册模板** (2026-04-22): 创建 `AgentSystem/.claude/templates/01-运维手册规范.md`，规范运维文档的内容分类（10/8章结构）、排版格式（标题层级、表格、代码块、警告提示）、HTML 转换规则（封面页、目录、样式）。适用单一大规模软件用精简8章，通用企业IT系统用完整10章。
+- **运维手册模板** (2026-04-22): 创建 `.claude/templates/01-运维手册规范.md`，规范运维文档的内容分类（10/8章结构）、排版格式（标题层级、表格、代码块、警告提示）、HTML 转换规则（封面页、目录、样式）。适用单一大规模软件用精简8章，通用企业IT系统用完整10章。
 - **Oryx start_redis 递归问题** (2026-04-27): Oryx 容器内 `auto/start_redis` 被 bootstrap 调用，不能用 `exec bootstrap` 替换进程，否则递归调用。正确做法：加载环境变量后直接返回。
 - **Oryx load_env 不存在** (2026-04-27): Oryx 容器内 `auto/load_env` 文件不存在，实际从 `containers/data/config/.env` 读取环境变量。
 - **Oryx 8080 端口 errno=98** (2026-04-27): Oryx Go 服务绑定 0.0.0.0:8080 失败，ss 显示无占用但实际 bind 失败，可能与容器网络模式或 SRS 残留进程有关。**方案搁置，用户回归 ZLM + StreamUI**。

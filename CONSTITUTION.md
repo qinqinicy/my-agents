@@ -93,7 +93,7 @@ MyAgents/
 
 | 层级 | 文件 | 加载时机 | 内容 |
 |------|------|----------|------|
-| **核心记忆** | `AgentSystem/.claude/rules/04-MEMORY.md` | 每次会话自动加载 | 跨项目经验、用户偏好、关键决策 |
+| **核心记忆** | `.claude/rules/04-MEMORY.md` | 每次会话自动加载 | 跨项目经验、用户偏好、关键决策 |
 | **主题记忆** | `AgentSystem/memory/topics/<name>.md` | 工作前读取 | 单项目完整经验 |
 | **每日日志** | `AgentSystem/memory/YYYY-MM-DD.md` | 启动时读今日 + 昨日 | 原始流水账 |
 
@@ -314,9 +314,9 @@ project: 项目名称
 
 ### 第二十七条：技能定义
 
-技能位于 `AgentSystem/.claude/skills/`，支持：
+技能位于 `.claude/skills/`，支持：
 - 本地技能目录
-- 符号链接至全局技能 (`~/.myagents/skills/`)
+- 全局技能安装
 
 ### 第二十八条：使用方式
 
@@ -326,7 +326,7 @@ project: 项目名称
 ### 第二十九条：新增技能
 
 1. 使用 `/skill-creator` 创建向导
-2. 新技能存放于 `AgentSystem/.claude/skills/<技能名>/SKILL.md`
+2. 新技能存放于 `.claude/skills/<技能名>/SKILL.md`
 3. 自动对根目录和子目录会话可见
 
 ---
