@@ -1,7 +1,7 @@
 ---
 title: IoTDB时序数据库运维手册
-version: v1.0
-date: 2026-04-22
+version: v1.3
+date: 2026-05-08
 author: qin
 reviewer: 秦
 status: 正式发布
@@ -17,6 +17,9 @@ status: 正式发布
 
 | 版本 | 日期 | 作者 | 变更内容 |
 |------|------|------|----------|
+| v1.3 | 2026-05-08 | qin | 新增金城无人机场景（root.jincheng.device，17条时序） |
+| v1.2 | 2026-04-29 | qin | 大横琴无人车场景时序接入完成（root.dhq，48条时序） |
+| v1.1 | 2026-04-29 | qin | 新增大横琴无人车场景时序定义（3001/3002/3003/3004 + 统计类） |
 | v1.0 | 2026-04-22 | qin | 按规范模板重构，md + html 双版本输出 |
 | v0.1 | 2026-04-21 | qin | 初始版本，IoTDB 集群接入验证 |
 
@@ -30,7 +33,7 @@ status: 正式发布
 
 **适用范围**：
 - IoTDB 2.0.7 集群部署与运维
-- 城市治理、运营中心、智慧灯杆等场景数据接入
+- 城市治理、大横琴无人车、金城无人机等场景数据接入
 - REST API / MQTT 等协议接入配置
 
 ### 1.2 系统简介
@@ -390,31 +393,117 @@ curl -X POST "http://10.129.80.142:18080/rest/v2/nonQuery" \
 
 ### 5.4 多场景快速配置
 
-| 场景 | 存储组 | MQTT Topic | 说明 |
-|------|--------|------------|------|
-| 城市治理 | root.cszl | root.cszl.uav | 无人机数据 |
-| 运营中心 | root.yyzx | root.yyzx.device | 设备数据 |
-| 智慧灯杆 | root.zhdg | root.zhdg.lamp | 灯杆数据 |
+| 场景 | 存储组 | 时序路径 | 说明 |
+|------|--------|----------|------|
+| 城市治理 | root.cszl | root.cszl.uav.* | 无人机数据 |
+| 大横琴无人车 | root.dhq | root.dhq.{ugv_status,ugv_alarm,ugv_video_request,...} | 无人车状态/告警/视频请求/统计 |
+| 金城无人机 | root.jincheng | root.jincheng.device.* | 无人机设备数据（17字段） |
 
-**运营中心快速配置**：
+### 5.5 金城无人机场景时序定义
+
+**存储组**：`root.jincheng`
+
+**时序清单**（17字段）：
+
+| 字段 | 数据类型 | 说明 |
+|------|----------|------|
+| manager | TEXT | 管理方 |
+| manufacturer | TEXT | 制造商 |
+| devName | TEXT | 设备名称 |
+| devType | INT32 | 设备类型 |
+| devId | TEXT | 设备ID |
+| currentTime | INT64 | 当前时间戳 |
+| height | DOUBLE | 高度 |
+| lat | TEXT | 纬度 |
+| lon | TEXT | 经度 |
+| power | TEXT | 电量 |
+| speed | INT32 | 速度 |
+| yawAngle | DOUBLE | 偏航角 |
+| rollAngle | DOUBLE | 横滚角 |
+| pitchAngle | DOUBLE | 俯仰角 |
+| flvStreamUrl | TEXT | FLV流地址 |
+| devStatus | TEXT | 设备状态 |
+| alt | TEXT | 高度（文本） |
+
+**验证命令**：
 ```sql
--- 创建存储组
-CREATE DATABASE root.yyzx
-
--- 创建设备模板（按需）
-CREATE DEVICE TEMPLATE yyzx_template (temperature DOUBLE, humidity DOUBLE)
-
--- 设置设备模板
-SET DEVICE TEMPLATE yyzx_template TO root.yyzx.device
+SHOW DATABASES
+SHOW TIMESERIES root.jincheng.**
 ```
 
-**智慧灯杆快速配置**：
+### 5.6 大横琴无人车场景时序定义
+
+**存储组**：`root.dhq`（共 48 条时序）
+
+**MQTT Topic 与时序路径对照**：
+
+| 消息类型 | MQTT Topic | 时序路径 | 字段数 |
+|----------|-----------|----------|--------|
+| 无人车状态 | ugv_status | root.dhq.ugv_status.* | 16 |
+| 路网围栏 | manage_data_upload | root.dhq.manage_data_upload.* | 2 |
+| 视频请求 | ugvVedeo_requst | root.dhq.ugv_video_request.* | 6 |
+| 车辆告警 | ugv_alarm | root.dhq.ugv_alarm.* | 8 |
+| 排班数据 | UGV_Plan_Info | root.dhq.ugv_plan_info.* | 9 |
+| 路线统计 | UGV_route_Data | root.dhq.ugv_route_data.* | 3 |
+| 路网里程 | UGV_roadnet_Data | root.dhq.ugv_roadnet_data.* | 2 |
+| 运营统计 | UGV_Operation_Data | root.dhq.ugv_operation_data.* | 5 |
+| 路线运营 | UGV_route_Operation_Data | root.dhq.ugv_route_operation.* | 5 |
+
+**时序清单**：
+
+**root.dhq.ugv_status**（无人车状态，16字段）：
 ```sql
--- 创建存储组
-CREATE DATABASE root.zhdg
+vehicleBrand, operator, vehicleType, vehicleVIN, vehicleId, online, faultStatus,
+gpsAlt, gpsLat, gpsLon, heading, velocity, acceleration, gear, model, coordinateSystem
 ```
 
-> **提示**：MQTT 消息中的 device 字段需与存储组路径对应，如 `root.yyzx.device`。
+**root.dhq.manage_data_upload**（路网围栏，2字段）：
+```sql
+roadNet, geoFenceVos
+```
+
+**root.dhq.ugv_video_request**（视频请求，6字段）：
+```sql
+vehicleBrand, vehicleType, vehicleId, reqType, videoType, realStartTime
+```
+
+**root.dhq.ugv_alarm**（车辆告警，8字段）：
+```sql
+vehicleBrand, vehicleType, vehicleId, alarmType, alarmPara,
+alarmPointLon, alarmPointLat, alarmPointAlt
+```
+
+**root.dhq.ugv_plan_info**（排班数据，9字段）：
+```sql
+vehicleVIN, vehicleName, vehicleNumber, routeId, routeName,
+departureTime, passingStation, planDate, status
+```
+
+**root.dhq.ugv_route_data**（路线统计，3字段）：
+```sql
+routeNumber, routeLen, routeType
+```
+
+**root.dhq.ugv_roadnet_data**（路网里程，2字段）：
+```sql
+routeNetNum, routeMileage
+```
+
+**root.dhq.ugv_operation_data**（运营统计，5字段）：
+```sql
+vehicleAmount, operatorAmount, mileage, totleTime, totlePassenger
+```
+
+**root.dhq.ugv_route_operation**（路线运营，5字段）：
+```sql
+routeID, routeName, planList, totlePassenger, currentPassenger
+```
+
+**验证命令**：
+```sql
+SHOW DATABASES
+SHOW TIMESERIES root.dhq.**
+```
 
 ---
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>视频平台运维手册 v2.0</title>
+<title>视频平台运维手册 v2.1</title>
 <style>
     body {
         font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", "思源黑体", sans-serif;
@@ -297,6 +297,7 @@
 <tr><td>v1.8</td><td>2026-04-23</td><td>秦</td><td>按规范模板更新：目录标题独立 h1 样式（白底蓝字下划线）</td></tr>
 <tr><td>v1.9</td><td>2026-04-23</td><td>秦</td><td>按规范模板更新：body 背景改为 #fafafa</td></tr>
 <tr><td>v2.0</td><td>2026-04-29</td><td>秦</td><td><strong>重大更新</strong>：流命名规范化（machinenest/drone/5gacamera），录制路径改为 {场景}/{流ID} 结构，rclone sync 改为按场景自动分流脚本</td></tr>
+<tr><td>v2.1</td><td>2026-04-29</td><td>秦</td><td>新增 S3 API 访问方式、MinIO IAM 权限管理、对外接口说明；清理 yyzx 场景（仅保留 cszl）</td></tr>
 </table>
 </div>
 
@@ -421,7 +422,7 @@
 <tr><td>MinIO API</td><td>9000</td><td>S3 兼容存储 API</td></tr>
 <tr><td>MinIO Console</td><td>9001</td><td>Web 管理界面</td></tr>
 <tr><td>rclone serve (cszl)</td><td>8091</td><td>第三方视频访问</td></tr>
-<tr><td>rclone serve (yyzx)</td><td>8092</td><td>运营中心视频访问</td></tr>
+<tr><td>rclone serve (cszl)</td><td>8091</td><td>第三方视频访问</td></tr>
 </table>
 
 <h2>3.2 配置文件说明</h2>
@@ -470,13 +471,6 @@ endpoint = http://10.129.80.211:9000
 access_key_id = minioadmin
 secret_access_key = Ka93@fnnbd2A
 bucket_policy = false
-
-[yyzx]
-type = s3
-provider = Other
-endpoint = http://10.129.80.211:9000
-access_key_id = yyzxkey
-secret_access_key = YyZX2026@Key!Pass
 </code></pre>
 
 <h3>systemd 服务配置</h3>
@@ -880,9 +874,9 @@ crontab -e
 
 <p><strong>验证方法</strong>：</p>
 <ul>
-<li><code>mc ls minio/yyzx-media</code> 显示桶存在</li>
-<li><code>rclone ls yyzx:</code> 显示 remote 可用</li>
-<li>第三方可访问 <code>http://IP:8092/</code></li>
+<li><code>mc ls minio/cszl-media</code> 显示桶存在</li>
+<li><code>rclone ls minio:</code> 显示 remote 可用</li>
+<li>第三方可访问 <code>http://IP:8091/</code></li>
 </ul>
 
 <p><strong>后续处理</strong>：</p>
@@ -896,83 +890,28 @@ crontab -e
 <table>
 <tr><th>场景</th><th>桶名</th><th>Service Account</th><th>Secret Key</th><th>访问端口</th><th>rclone remote</th><th>状态</th></tr>
 <tr><td>cszl（城市治理）</td><td>cszl-media</td><td>cszlkey</td><td>Ka93@fnnbd2A</td><td>8091</td><td>minio</td><td>已配置</td></tr>
-<tr><td>yyzx（运营中心）</td><td>yyzx-media</td><td>yyzxkey</td><td>YyZX2026@Key!Pass</td><td>8092</td><td>yyzx</td><td>已配置</td></tr>
 <tr><td>zhdg（智慧灯杆）</td><td>待创建</td><td>待创建</td><td>-</td><td>待配置</td><td>待配置</td><td>待接入</td></tr>
 </table>
 
-<h3>详细操作命令</h3>
-
-<p><strong>步骤 1 - MinIO 创建桶</strong>：</p>
-<pre><code>/root/mc mb minio/yyzx-media --ignore-existing</code></pre>
-
-<p><strong>步骤 2 - 创建策略文件</strong>：</p>
-<pre><code>cat > /tmp/yyzx-readonly.json << 'EOF'
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": ["s3:GetObject", "s3:ListBucket"],
-            "Resource": ["arn:aws:s3:::yyzx-media", "arn:aws:s3:::yyzx-media/*"]
-        }
-    ]
-}
-EOF</code></pre>
-
-<p><strong>步骤 3 - 创建 Service Account</strong>：</p>
-<pre><code>set +o history
-/root/mc admin user add minio yyzxkey YyZX2026@Key!Pass
-set -o history
-/root/mc admin policy create minio yyzx-readonly /tmp/yyzx-readonly.json
-/root/mc admin policy attach minio yyzx-readonly --user yyzxkey</code></pre>
-
-<p><strong>步骤 4 - ZLM 服务器配置 rclone</strong>：</p>
-<pre><code>cat >> /root/.config/rclone/rclone.conf << 'EOF'
-
-[yyzx]
-type = s3
-provider = Other
-endpoint = http://10.129.80.211:9000
-access_key_id = yyzxkey
-secret_access_key = YyZX2026@Key!Pass
-EOF</code></pre>
-
-<p><strong>步骤 5 - 创建 systemd 服务</strong>：</p>
-<pre><code>cat > /etc/systemd/system/rclone-yyzx.service << 'EOF'
-[Unit]
-Description=rclone MinIO yyzx HTTP Service
-After=network.target
-
-[Service]
-ExecStart=/opt/media/tools/rclone serve http minio:yyzx-media/yyzx/ --addr 0.0.0.0:8092 --user yyzxkey --pass 'YyZX2026@Key!Pass' --vfs-cache-mode writes --bind 0.0.0.0
-Restart=always
-User=root
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-systemctl daemon-reload
-systemctl enable rclone-yyzx
-systemctl start rclone-yyzx</code></pre>
+<p><strong>注</strong>：其他场景（yyzx 等）已清理，当前仅保留 cszl 场景。</p>
 
 <h2>5.4 新增场景流程</h2>
 
-<p><strong>适用场景</strong>：新增一个视频监控场景（如 yyzx 运营中心），包含多个摄像头/无人机/机巢等流。</p>
+<p><strong>适用场景</strong>：新增一个视频监控场景（如 zhdg 智慧灯杆），包含多个摄像头/无人机/机巢等流。</p>
 
 <p><strong>新增步骤</strong>：</p>
 
 <ol>
 <li><strong>ZLM Web 添加流</strong>：
   <ul>
-    <li>应用名：场景名（如 <code>yyzx</code>）</li>
+    <li>应用名：场景名（如 <code>zhdg</code>）</li>
     <li>流ID：按内容命名（如 <code>camera01</code>、<code>drone01</code>）</li>
     <li>源地址：对应的拉流 URL</li>
   </ul>
 </li>
 <li><strong>MinIO 创建桶</strong>：
   <pre><code># 在 MinIO 服务器上
-/root/mc mb minio/yyzx-media --ignore-existing</code></pre>
+/root/mc mb minio/zhdg-media --ignore-existing</code></pre>
 </li>
 <li><strong>自动同步</strong>：
   <ul>
@@ -983,13 +922,13 @@ systemctl start rclone-yyzx</code></pre>
 </li>
 </ol>
 
-<p><strong>示例：新增 yyzx 场景</strong>：</p>
+<p><strong>示例：新增 zhdg 场景</strong>：</p>
 
 <table>
 <tr><th>步骤</th><th>操作</th><th>结果</th></tr>
-<tr><td>1</td><td>ZLM 添加 <code>yyzx/camera01</code></td><td>本地 <code>/opt/media/www/record/yyzx/camera01/</code></td></tr>
-<tr><td>2</td><td>MinIO 创建 <code>yyzx-media</code> 桶</td><td>桶就绪</td></tr>
-<tr><td>3</td><td>cron 自动同步</td><td><code>yyzx-media/yyzx/camera01/</code></td></tr>
+<tr><td>1</td><td>ZLM 添加 <code>zhdg/camera01</code></td><td>本地 <code>/opt/media/www/record/zhdg/camera01/</code></td></tr>
+<tr><td>2</td><td>MinIO 创建 <code>zhdg-media</code> 桶</td><td>桶就绪</td></tr>
+<tr><td>3</td><td>cron 自动同步</td><td><code>zhdg-media/zhdg/camera01/</code></td></tr>
 </table>
 
 ---
@@ -999,7 +938,7 @@ systemctl start rclone-yyzx</code></pre>
 <h2>6.1 端口检查</h2>
 
 <pre><code># 检查关键端口
-ss -tlnp | grep -E ':(80|1935|554|10800|8091|8092|9000|9001)\s'
+ss -tlnp | grep -E ':(80|1935|554|10800|8091|9000|9001)\s'
 
 # 预期结果：
 # *:80        - ZLM HTTP
@@ -1007,7 +946,6 @@ ss -tlnp | grep -E ':(80|1935|554|10800|8091|8092|9000|9001)\s'
 # *:554       - ZLM RTSP
 # *:10800     - StreamUI
 # *:8091      - rclone cszl
-# *:8092      - rclone yyzx
 # *:9000      - MinIO API
 # *:9001      - MinIO Console</code></pre>
 
@@ -1057,6 +995,164 @@ grep -i error /opt/media/logs/sync.log</code></pre>
 
 ---
 
+<h1 id="sec6-5">6.5 MinIO IAM 权限管理</h1>
+
+<p><strong>功能</strong>：使用 MinIO 原生 IAM 实现细粒度权限控制</p>
+
+<h3>当前用户与策略</h3>
+
+<table>
+<tr><th>用户</th><th>策略</th><th>可访问桶</th><th>权限</th></tr>
+<tr><td>root (minioadmin)</td><td>consoleAdmin</td><td>所有桶</td><td>完全控制</td></tr>
+<tr><td>cszlkey</td><td>cszl-readonly</td><td>cszl-media</td><td>只读</td></tr>
+</table>
+
+<h3>cszl-readonly 策略详情</h3>
+
+<pre><code>{
+ "Version": "2012-10-17",
+ "Statement": [
+  {
+   "Effect": "Allow",
+   "Action": ["s3:GetObject", "s3:ListBucket"],
+   "Resource": ["arn:aws:s3:::cszl-media", "arn:aws:s3:::cszl-media/*"]
+  }
+ ]
+}</code></pre>
+
+<h3>新建场景用户（示例：新增 zhdg 场景）</h3>
+
+<pre><code># 1. 创建 zhdg-media 桶
+/root/mc mb minio/zhdg-media --ignore-existing
+
+# 2. 创建 zhdg-readonly 策略
+cat > /tmp/zhdg-readonly.json << 'EOF'
+{
+ "Version": "2012-10-17",
+ "Statement": [
+  {
+   "Effect": "Allow",
+   "Action": ["s3:GetObject", "s3:ListBucket"],
+   "Resource": ["arn:aws:s3:::zhdg-media", "arn:aws:s3:::zhdg-media/*"]
+  }
+ ]
+}
+EOF
+
+/root/mc admin policy create minio zhdg-readonly /tmp/zhdg-readonly.json
+
+# 3. 创建用户并绑定策略
+/root/mc admin user add minio zhdgkey ZhdG2026@Key!Pass
+/root/mc admin policy attach minio zhdg-readonly --user zhdgkey</code></pre>
+
+<h3>常用命令</h3>
+
+<pre><code># 查看所有用户
+mc admin user list minio
+
+# 查看所有策略
+mc admin policy list minio
+
+# 查看用户信息
+mc admin user info minio cszlkey
+
+# 禁用/启用用户
+mc admin user disable minio cszlkey
+mc admin user enable minio cszlkey
+
+# 删除用户
+mc admin user remove minio cszlkey</code></pre>
+
+---
+
+<h1 id="sec6-6">6.6 对外接口服务</h1>
+
+<p><strong>功能</strong>：提供录像文件访问给外部用户</p>
+
+<h3>访问方式概览</h3>
+
+<table>
+<tr><th>方式</th><th>端口</th><th>认证</th><th>适用场景</th></tr>
+<tr><td>S3 API</td><td>9000</td><td>Access Key + Secret Key</td><td>程序员/SDK/工具</td></tr>
+<tr><td>rclone serve HTTP</td><td>8091</td><td>Basic Auth</td><td>浏览器/简单 HTTP 客户端</td></tr>
+<tr><td>MinIO Console</td><td>9001</td><td>Web 登录</td><td>手动管理</td></tr>
+</table>
+
+<h3>方式一：S3 API（推荐）</h3>
+
+<p><strong>配置参数</strong>：</p>
+
+<table>
+<tr><th>参数</th><th>值</th></tr>
+<tr><td>Endpoint</td><td><code>http://10.129.80.211:9000</code></td></tr>
+<tr><td>Access Key</td><td><code>cszlkey</code></td></tr>
+<tr><td>Secret Key</td><td><code>Ka93@fnnbd2A</code></td></tr>
+<tr><td>Bucket</td><td><code>cszl-media</code></td></tr>
+<tr><td>Region</td><td><code>us-east-1</code>（默认）</td></tr>
+</table>
+
+<p><strong>Python boto3 示例</strong>：</p>
+
+<pre><code>import boto3
+
+s3 = boto3.client('s3',
+    endpoint_url='http://10.129.80.211:9000',
+    aws_access_key_id='cszlkey',
+    aws_secret_access_key='Ka93@fnnbd2A',
+    region_name='us-east-1'
+)
+
+# 列出文件
+result = s3.list_objects_v2(Bucket='cszl-media', Prefix='cszl/')
+for obj in result.get('Contents', []):
+    print(obj['Key'], obj['Size'])
+
+# 下载文件
+s3.download_file('cszl-media', 'cszl/machinenest/2026-04-28/video.mp4', '/local/video.mp4')</code></pre>
+
+<p><strong>AWS CLI 示例</strong>：</p>
+
+<pre><code># 配置 alias
+mc alias set minio http://10.129.80.211:9000 cszlkey Ka93@fnnbd2A
+
+# 列出文件
+mc ls minio/cszl-media/cszl/machinenest/
+
+# 下载文件
+mc cp minio/cszl-media/cszl/machinenest/2026-04-28/video.mp4 /local/video.mp4</code></pre>
+
+<h3>方式二：rclone serve HTTP</h3>
+
+<p><strong>访问地址</strong>：<code>http://10.129.80.242:8091/</code></p>
+
+<p><strong>认证</strong>：HTTP Basic Auth</p>
+<ul>
+<li>用户名：<code>cszlkey</code></li>
+<li>密码：<code>Ka93@fnnbd2A</code></li>
+</ul>
+
+<p><strong>URL 格式</strong>：</p>
+
+<pre><code># 直接访问文件
+http://10.129.80.242:8091/cszl/machinenest/2026-04-28/video.mp4
+
+# 浏览器访问（会弹出认证对话框）
+http://10.129.80.242:8091/cszl/</code></pre>
+
+<h3>方式三：MinIO Console</h3>
+
+<p><strong>访问地址</strong>：<code>http://10.129.80.211:9001</code></p>
+
+<p><strong>登录账号</strong>：</p>
+<ul>
+<li>用户名：<code>minioadmin</code></li>
+<li>密码：<code>Ka93@fnnbd2A</code></li>
+</ul>
+
+<p><strong>用途</strong>：手动管理桶、用户、策略；查看文件；调试</p>
+
+---
+
 <h1 id="sec7">7. 数据管理</h1>
 
 <h2>7.1 备份恢复</h2>
@@ -1067,7 +1163,6 @@ grep -i error /opt/media/logs/sync.log</code></pre>
 <tr><th>备份内容</th><th>频率</th><th>保留周期</th><th>备份方式</th></tr>
 <tr><td>ZLM 配置</td><td>每周</td><td>30 天</td><td>文件复制</td></tr>
 <tr><td>录像文件</td><td>实时同步</td><td>永久</td><td>rclone sync</td></tr>
-<tr><td>StreamUI 数据库</td><td>每周</td><td>30 天</td><td>文件复制</td></tr>
 </table>
 
 <h3>备份操作</h3>
@@ -1075,11 +1170,8 @@ grep -i error /opt/media/logs/sync.log</code></pre>
 <pre><code># 备份 ZLM 配置
 cp -r /opt/media/conf /data/backup/zlm_conf_$(date +%Y%m%d)
 
-# 备份 StreamUI 数据库
-cp -r /opt/streamui/db /data/backup/streamui_db_$(date +%Y%m%d)
-
 # 验证 MinIO 同步状态
-/root/mc ls minio/csZl-media/cszl/ | tail -5</code></pre>
+/root/mc ls minio/cszl-media/cszl/ | tail -5</code></pre>
 
 <h2>7.2 数据过期策略</h2>
 
@@ -1105,7 +1197,6 @@ find /opt/media/www/record -name "*.mp4" -mtime +7 -delete</code></pre>
 <table>
 <tr><th>账号</th><th>Access Key</th><th>Secret Key</th><th>权限</th><th>用途</th><th>端口</th></tr>
 <tr><td>cszl</td><td>cszlkey</td><td>Ka93@fnnbd2A</td><td>只读</td><td>城市治理主账号</td><td>8091</td></tr>
-<tr><td>yyzx</td><td>yyzxkey</td><td>YyZX2026@Key!Pass</td><td>只读</td><td>运营中心</td><td>8092</td></tr>
 </table>
 
 <h3>安全策略</h3>

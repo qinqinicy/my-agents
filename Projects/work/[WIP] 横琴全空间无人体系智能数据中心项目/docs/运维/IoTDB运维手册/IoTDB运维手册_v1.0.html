@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IoTDB 时序数据库运维手册 v1.0</title>
+<title>IoTDB 时序数据库运维手册 v1.3</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;font-size:14px;color:#333;line-height:1.8;background:#fafafa}
@@ -50,7 +50,7 @@
     <h1>IoTDB 时序数据库运维手册</h1>
     <div class="subtitle">横琴全空间无人体系智能数据中心项目</div>
     <div class="meta">
-      版本: v1.0 | 编写日期: 2026-04-22<br>
+      版本: v1.3 | 编写日期: 2026-05-08<br>
       作者: qin | 审核人: 秦<br>
       状态: 正式发布
     </div>
@@ -63,7 +63,7 @@
       <div class="toc-item"><b>2.</b> 系统架构 <span>2.1-2.4</span></div>
       <div class="toc-item"><b>3.</b> 安装配置 <span>3.1-3.3</span></div>
       <div class="toc-item"><b>4.</b> 日常运维 <span>4.1-4.4</span></div>
-      <div class="toc-item"><b>5.</b> 接入配置 <span>5.1-5.4</span></div>
+      <div class="toc-item"><b>5.</b> 接入配置 <span>5.1-5.6</span></div>
       <div class="toc-item"><b>6.</b> 监控运维 <span>6.1-6.4</span></div>
       <div class="toc-item"><b>7.</b> 数据管理 <span>7.1-7.3</span></div>
       <div class="toc-item"><b>8.</b> 故障排除 <span>8.1-8.3</span></div>
@@ -75,6 +75,9 @@
     <h1 style="background:#fff;color:#1976d2;border-bottom:3px solid #1976d2;border-radius:0;box-shadow:none;text-align:center;padding:14px">修订记录</h1>
     <table>
       <tr><th>版本</th><th>日期</th><th>作者</th><th>变更内容</th></tr>
+      <tr><td>v1.3</td><td>2026-05-08</td><td>qin</td><td>新增金城无人机场景（root.jincheng.device，17条时序）</td></tr>
+      <tr><td>v1.2</td><td>2026-04-29</td><td>qin</td><td>大横琴无人车场景时序接入完成（root.dhq，48条时序）</td></tr>
+      <tr><td>v1.1</td><td>2026-04-29</td><td>qin</td><td>新增大横琴无人车场景时序定义（3001/3002/3003/3004 + 统计类）</td></tr>
       <tr><td>v1.0</td><td>2026-04-22</td><td>qin</td><td>按规范模板重构，md + html 双版本输出</td></tr>
       <tr><td>v0.1</td><td>2026-04-21</td><td>qin</td><td>初始版本，IoTDB 集群接入验证</td></tr>
     </table>
@@ -88,7 +91,7 @@
     <p><strong>适用范围</strong>：</p>
     <ul>
       <li>IoTDB 2.0.7 集群部署与运维</li>
-      <li>城市治理、运营中心、智慧灯杆等场景数据接入</li>
+      <li>城市治理、大横琴无人车、金城无人机等场景数据接入</li>
       <li>REST API / MQTT 等协议接入配置</li>
     </ul>
 
@@ -372,24 +375,79 @@ VALUES (1776747236000, 'D0101209', 22.1, 113.5),
 
     <h2>5.4 多场景快速配置</h2>
     <table>
-      <tr><th>场景</th><th>存储组</th><th>MQTT Topic</th><th>说明</th></tr>
-      <tr><td>城市治理</td><td>root.cszl</td><td>root.cszl.uav</td><td>无人机数据</td></tr>
-      <tr><td>运营中心</td><td>root.yyzx</td><td>root.yyzx.device</td><td>设备数据</td></tr>
-      <tr><td>智慧灯杆</td><td>root.zhdg</td><td>root.zhdg.lamp</td><td>灯杆数据</td></tr>
+      <tr><th>场景</th><th>存储组</th><th>时序路径</th><th>说明</th></tr>
+      <tr><td>城市治理</td><td>root.cszl</td><td>root.cszl.uav.*</td><td>无人机数据</td></tr>
+      <tr><td>大横琴无人车</td><td>root.dhq</td><td>root.dhq.{ugv_status,ugv_alarm,ugv_video_request,...}</td><td>无人车状态/告警/视频请求/统计</td></tr>
+      <tr><td>金城无人机</td><td>root.jincheng</td><td>root.jincheng.device.*</td><td>无人机设备数据（17字段）</td></tr>
     </table>
-    <p><strong>运营中心快速配置</strong>：</p>
-    <pre><code>-- 创建存储组
-CREATE DATABASE root.yyzx
 
--- 创建设备模板（按需）
-CREATE DEVICE TEMPLATE yyzx_template (temperature DOUBLE, humidity DOUBLE)
+    <h2>5.5 金城无人机场景时序定义</h2>
+    <p><strong>存储组</strong>：<code>root.jincheng</code></p>
+    <p><strong>时序清单</strong>（17字段）：</p>
+    <table>
+      <tr><th>字段</th><th>数据类型</th><th>说明</th></tr>
+      <tr><td>manager</td><td>TEXT</td><td>管理方</td></tr>
+      <tr><td>manufacturer</td><td>TEXT</td><td>制造商</td></tr>
+      <tr><td>devName</td><td>TEXT</td><td>设备名称</td></tr>
+      <tr><td>devType</td><td>INT32</td><td>设备类型</td></tr>
+      <tr><td>devId</td><td>TEXT</td><td>设备ID</td></tr>
+      <tr><td>currentTime</td><td>INT64</td><td>当前时间戳</td></tr>
+      <tr><td>height</td><td>DOUBLE</td><td>高度</td></tr>
+      <tr><td>lat</td><td>TEXT</td><td>纬度</td></tr>
+      <tr><td>lon</td><td>TEXT</td><td>经度</td></tr>
+      <tr><td>power</td><td>TEXT</td><td>电量</td></tr>
+      <tr><td>speed</td><td>INT32</td><td>速度</td></tr>
+      <tr><td>yawAngle</td><td>DOUBLE</td><td>偏航角</td></tr>
+      <tr><td>rollAngle</td><td>DOUBLE</td><td>横滚角</td></tr>
+      <tr><td>pitchAngle</td><td>DOUBLE</td><td>俯仰角</td></tr>
+      <tr><td>flvStreamUrl</td><td>TEXT</td><td>FLV流地址</td></tr>
+      <tr><td>devStatus</td><td>TEXT</td><td>设备状态</td></tr>
+      <tr><td>alt</td><td>TEXT</td><td>高度（文本）</td></tr>
+    </table>
+    <p><strong>验证命令</strong>：</p>
+    <pre><code>SHOW DATABASES
+SHOW TIMESERIES root.jincheng.**</code></pre>
 
--- 设置设备模板
-SET DEVICE TEMPLATE yyzx_template TO root.yyzx.device</code></pre>
-    <p><strong>智慧灯杆快速配置</strong>：</p>
-    <pre><code>-- 创建存储组
-CREATE DATABASE root.zhdg</code></pre>
-    <div class="note"><strong>注意</strong>：MQTT 消息中的 device 字段需与存储组路径对应，如 <code>root.yyzx.device</code>。</div>
+    <h2>5.6 大横琴无人车场景时序定义</h2>
+    <p><strong>存储组</strong>：<code>root.dhq</code>（共 48 条时序）</p>
+    <p><strong>MQTT Topic 与时序路径对照</strong>：</p>
+    <table>
+      <tr><th>消息类型</th><th>MQTT Topic</th><th>时序路径</th><th>字段数</th></tr>
+      <tr><td>无人车状态</td><td>ugv_status</td><td>root.dhq.ugv_status.*</td><td>16</td></tr>
+      <tr><td>路网围栏</td><td>manage_data_upload</td><td>root.dhq.manage_data_upload.*</td><td>2</td></tr>
+      <tr><td>视频请求</td><td>ugvVedeo_requst</td><td>root.dhq.ugv_video_request.*</td><td>6</td></tr>
+      <tr><td>车辆告警</td><td>ugv_alarm</td><td>root.dhq.ugv_alarm.*</td><td>8</td></tr>
+      <tr><td>排班数据</td><td>UGV_Plan_Info</td><td>root.dhq.ugv_plan_info.*</td><td>9</td></tr>
+      <tr><td>路线统计</td><td>UGV_route_Data</td><td>root.dhq.ugv_route_data.*</td><td>3</td></tr>
+      <tr><td>路网里程</td><td>UGV_roadnet_Data</td><td>root.dhq.ugv_roadnet_data.*</td><td>2</td></tr>
+      <tr><td>运营统计</td><td>UGV_Operation_Data</td><td>root.dhq.ugv_operation_data.*</td><td>5</td></tr>
+      <tr><td>路线运营</td><td>UGV_route_Operation_Data</td><td>root.dhq.ugv_route_operation.*</td><td>5</td></tr>
+    </table>
+    <p><strong>时序清单</strong>：</p>
+    <p><strong>root.dhq.ugv_status</strong>（无人车状态，16字段）：</p>
+    <pre><code>vehicleBrand, operator, vehicleType, vehicleVIN, vehicleId, online, faultStatus,
+gpsAlt, gpsLat, gpsLon, heading, velocity, acceleration, gear, model, coordinateSystem</code></pre>
+    <p><strong>root.dhq.manage_data_upload</strong>（路网围栏，2字段）：</p>
+    <pre><code>roadNet, geoFenceVos</code></pre>
+    <p><strong>root.dhq.ugv_video_request</strong>（视频请求，6字段）：</p>
+    <pre><code>vehicleBrand, vehicleType, vehicleId, reqType, videoType, realStartTime</code></pre>
+    <p><strong>root.dhq.ugv_alarm</strong>（车辆告警，8字段）：</p>
+    <pre><code>vehicleBrand, vehicleType, vehicleId, alarmType, alarmPara,
+alarmPointLon, alarmPointLat, alarmPointAlt</code></pre>
+    <p><strong>root.dhq.ugv_plan_info</strong>（排班数据，9字段）：</p>
+    <pre><code>vehicleVIN, vehicleName, vehicleNumber, routeId, routeName,
+departureTime, passingStation, planDate, status</code></pre>
+    <p><strong>root.dhq.ugv_route_data</strong>（路线统计，3字段）：</p>
+    <pre><code>routeNumber, routeLen, routeType</code></pre>
+    <p><strong>root.dhq.ugv_roadnet_data</strong>（路网里程，2字段）：</p>
+    <pre><code>routeNetNum, routeMileage</code></pre>
+    <p><strong>root.dhq.ugv_operation_data</strong>（运营统计，5字段）：</p>
+    <pre><code>vehicleAmount, operatorAmount, mileage, totleTime, totlePassenger</code></pre>
+    <p><strong>root.dhq.ugv_route_operation</strong>（路线运营，5字段）：</p>
+    <pre><code>routeID, routeName, planList, totlePassenger, currentPassenger</code></pre>
+    <p><strong>验证命令</strong>：</p>
+    <pre><code>SHOW DATABASES
+SHOW TIMESERIES root.dhq.**</code></pre>
 
     <hr>
 
