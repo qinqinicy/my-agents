@@ -36,7 +36,9 @@
 
 ### 进行中
 
-*暂无*
+| 项目名称 | 开始时间 | 更新时间 | 备注 |
+|----------|----------|----------|------|
+| [WIP] 2026 软考系统架构师备考 | 2026-03 | 2026-05-14 | 备考中 |
 
 ### 暂停
 
@@ -59,7 +61,6 @@
 | `Projects/{area}/{name}/` | 主项目目录（状态前缀管理） |
 | `Loading_files/{area}/{name}/` | 基础材料仓库 |
 | `SilentSpace/{area}/{name}/` | 临时工作台 |
-| `Archives/{area}/{name}/` | 归档目录（[ARC] 项目） |
 | `Knowledge/{area}/` | 知识沉淀（可复用知识） |
 
 > **命名同步规则**：修改 `Projects/` 中的项目名称后，其他位置的对应项目目录应同步更新以保持映射。
@@ -68,7 +69,7 @@
 
 ## 归档日志
 
-归档记录请见：[ARCHIVES_LOG.md](../Archives/ARCHIVES_LOG.md)
+归档记录请见：[ARCHIVES_LOG.md](./ARCHIVES_LOG.md)
 
 ---
 
@@ -81,7 +82,7 @@ Projects/（建立对应项目）
     ↓
 SilentSpace/（临时工作台/产出过程文件）
     ↓
-Archives/（项目归档）
+归档（改状态前缀，知识在用户确认时沉淀）
     ↓
 Knowledge/（知识沉淀/可复用知识）
 ```

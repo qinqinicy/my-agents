@@ -48,20 +48,20 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 
 ### Working Style
 
-- **工作区划分** (2026-03-02): `Projects/` 是项目资产仓库，`Knowledge/` 和 `Archives/` 是跨项目知识库和归档库，`AgentSystem/memory/topics/` 是档案索引，`SilentSpace/` 是每日草稿纸。项目文件存仓库，临时文件用完即弃。
+- **工作区划分** (2026-03-02): `Projects/` 是项目资产仓库，`Knowledge/` 是跨项目知识库，`AgentSystem/memory/topics/` 是档案索引，`SilentSpace/` 是每日草稿纸。项目文件存仓库，临时文件用完即弃。
 - **记忆系统初始化** (2026-03-02): 为 4 个项目创建记忆档案：横琴项目、软考备考、知识图谱产品、交通部招聘笔试。
 - **工作区重构** (2026-03-18):
   - 核心分区标签：`work/` 和 `personal/`（小写统一）
   - `Knowledge/` 提升至根目录，下设 `work/`、`personal/`、`public/`（公共知识融合）
-  - `Archives/` 提升至根目录，下设 `work/`、`personal/`，增加 `ARCHIVES_LOG.md` 归档日志
-  - `Projects/` 下使用状态前缀管理项目：`[WIP]` 进行中、`[HLD]` 暂停；已完成项目直接归档至 `Archives/`
-  - 文件流转：`Loading_files/`（基础资料）→ `Projects/`（项目管理）→ `SilentSpace/`（临时工作台）→ `Archives/`（归档）→ `Knowledge/`（沉淀）
+  - `Projects/` 下使用状态前缀管理项目：`[WIP]` 进行中、`[HLD]` 暂停；已完成项目直接归档（带 `[ARC]` 前缀）
+  - 文件流转：`Loading_files/`（基础资料）→ `Projects/`（项目管理）→ `SilentSpace/`（临时工作台）→ `归档（改前缀）`→ `Knowledge/`（沉淀）
   - 项目索引：`Projects/PROJECTS.md` 维护全局项目清单和映射关系
 - **工作区配置统一** (2026-04-23):
   - `.claude/` 为实体目录（原在 `AgentSystem/.claude/`），统一维护一份配置
   - `myagents_files/` 更名为 `Outputs/`，明确输出文档位置
   - `Projects/work/` 项目内部结构统一为 `docs/{设计,运维,平台,其他}/` 子分类
   - 孔明平台作为横琴项目的子平台，不再是独立项目
+- **Archives 目录移除** (2026-05-14): 归档 = 知识沉淀时机，用户要求区分"立即沉淀"和"归档时沉淀"；ARCHIVES_LOG.md 移至 Projects/，项目文件保留在原位（改前缀即可）
 
 ### Communication
 
@@ -97,17 +97,16 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
   - `myagents_files/` → `Loading_files/`（引用文件仓库）
   - `memory/topics/` 分为 `work/`、`personal/`、`public/` 三个子目录
   - `Work/` 和 `Personal/` → `Projects/Work/` 和 `Projects/Personal/`（统一项目资产管理）
-  - `Knowledge/` 和 `Archives/` 提升至根目录（跨项目知识/归档）
+  - `Knowledge/` 提升至根目录（跨项目知识库）
   - 统一大小写：`projects/` → `Projects/`，`active/` → `Active/`
-- **工作区简化** (2026-03-18):
+- **工作区最终简化** (2026-03-19):
   - 核心分区：`work/` 和 `personal/`（小写）
   - `Projects/` 下移除 `Projects/` 和 `Active/` 子目录，改用状态前缀：`[WIP]`、`[HLD]`
-  - `SilentSpace/`、`Loading_files/`、`Archives/`、`Knowledge/` 均按 `work/`、`personal/` 分类
+  - `SilentSpace/`、`Loading_files/`、`Knowledge/` 均按 `work/`、`personal/` 分类
   - `Knowledge/` 新增 `public/` 融合公共知识
-- **工作区最终简化** (2026-03-19):
-  - 移除 `[OK]` 状态，已完成项目直接归档至 `Archives/`（带 `[ARC]` 前缀）
+  - 移除 `[OK]` 状态，已完成项目直接归档（带 `[ARC]` 前缀）
   - 创建 `Projects/PROJECTS.md` 全局项目索引，维护所有项目状态和映射关系
-  - 创建 `Archives/ARCHIVES_LOG.md` 归档日志，记录归档详情和知识沉淀路径
+  - 创建 `Projects/ARCHIVES_LOG.md` 归档日志，记录归档详情和知识沉淀路径
   - 项目状态前缀统一：`[WIP]`（进行中）、`[HLD]`（暂停）、`[ARC]`（已归档）
 - **Outputs 目录与 Work 项目结构** (2026-04-23):
   - `myagents_files/` → `Outputs/`，Agent 生成输出放此目录
