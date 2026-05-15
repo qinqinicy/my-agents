@@ -88,6 +88,8 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - **流命名规范化** (2026-04-29): machinenest（机巢）、drone（无人机）、5gacamera（5G-A摄像头），录制路径 `{场景}/{流ID}/`
 - **rclone sync 按场景分流** (2026-04-29): sync_by_scene.sh 遍历场景目录，检查桶存在性后同步到 `minio:{scene}-media/`
 - **MinIO IAM 权限管理** (2026-04-29): cszlkey + cszl-readonly 策略，只读访问 cszl-media 桶
+- **孔明平台 License 双路径** (2026-05-15): alopex_proxy 读 `/opt/haizhi/.license/haizhi.license`，ai-web 读 `/opt/haizhi/license/haizhi.license`，新部署时两个目录都要配置
+- **孔明离线安装 Docker** (2026-05-15): 离线包解包后 cp docker/* /usr/bin/，docker.sock 权限需 chmod 666 才能让非 root 用户操作
 
 ## Important Decisions
 
@@ -129,14 +131,14 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 | 横琴全空间无人体系智能数据中心 | Work | 详细设计阶段 | `AgentSystem/memory/topics/work/横琴全空间无人体系智能数据中心.md` |
 | 视频平台运维（ZLM+StreamUI+MinIO）| Work | 运维阶段 | `AgentSystem/memory/topics/work/视频平台运维.md` |
 | 2026 软考系统架构师备考 | Personal | 备考中 | `AgentSystem/memory/topics/personal/软考备考.md` |
-| 交通部第四批招聘笔试备考 | Personal | 已归档 | `AgentSystem/memory/topics/personal/交通部招聘笔试.md` |
 | 知识图谱产品手册 | Work | 知识库建设 | `AgentSystem/memory/topics/work/知识图谱产品.md` |
 
 ### Recent Work (2026-04/05)
 - **流命名规范化** (2026-04-29): machinenest/drone/5gacamera，录制路径 {场景}/{流ID}/，rclone sync 按场景分流
 - **MinIO IAM** (2026-04-29): cszlkey 只读访问 cszl-media，S3 API 对外服务
 - **IoTDB 场景接入** (2026-05-08): 大横琴无人车(root.dhq, 48时序)、金城无人机(root.jincheng, 17时序)
-- **WireGuard VPN 部署** (2026-05-08/10): 腾讯云 129.204.87.213 服务端运行中，Mac + Win1 已连通（10.0.0.0/24），Win2 待连接，Win1 RDP 连接调试中
+- **WireGuard VPN 部署** (2026-05-08/10): 腾讯云 129.204.87.213 服务端运行中，Mac + Win1 已连通（10.0.0.0/24），Win2 待连接
+- **孔明平台新部署** (2026-05-15): 10.129.80.235 离线部署完成（ai_2.0.2，CentOS 7，4T 盘挂载 /data），License 双路径问题已解决，DMC 对接待配置
 
 ---
 
