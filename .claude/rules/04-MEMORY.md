@@ -90,6 +90,9 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - **MinIO IAM 权限管理** (2026-04-29): cszlkey + cszl-readonly 策略，只读访问 cszl-media 桶
 - **孔明平台 License 双路径** (2026-05-15): alopex_proxy 读 `/opt/haizhi/.license/haizhi.license`，ai-web 读 `/opt/haizhi/license/haizhi.license`，新部署时两个目录都要配置
 - **孔明离线安装 Docker** (2026-05-15): 离线包解包后 cp docker/* /usr/bin/，docker.sock 权限需 chmod 666 才能让非 root 用户操作
+- **孔明 DMC 对接防火墙** (2026-05-18): DMC 服务器防火墙默认不开 Redis 6679 端口，孔明 hz-fe 连不上导致所有 /api/alchemy/* 502；`firewall-cmd --add-port=6679/tcp` 解决
+- **孔明 alchemy DMC 配置** (2026-05-18): 默认无 `application-prod.yaml`，需手动创建并配置 `client.usercenter.url` 指向 DMC usercenter
+- **孔明 brain/config.js** (2026-05-18): `dmcDomain` 为空时不显示"控制台"按钮，DMC SSO 跳转不自动是 DMC 前端问题，非孔明侧
 
 ## Important Decisions
 
@@ -138,7 +141,8 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - **MinIO IAM** (2026-04-29): cszlkey 只读访问 cszl-media，S3 API 对外服务
 - **IoTDB 场景接入** (2026-05-08): 大横琴无人车(root.dhq, 48时序)、金城无人机(root.jincheng, 17时序)
 - **WireGuard VPN 部署** (2026-05-08/10): 腾讯云 129.204.87.213 服务端运行中，Mac + Win1 已连通（10.0.0.0/24），Win2 待连接
-- **孔明平台新部署** (2026-05-15): 10.129.80.235 离线部署完成（ai_2.0.2，CentOS 7，4T 盘挂载 /data），License 双路径问题已解决，DMC 对接待配置
+- **孔明平台新部署** (2026-05-15): 10.129.80.235 离线部署完成（ai_2.0.2，CentOS 7，4T 盘挂载 /data），License 双路径问题已解决
+- **孔明 DMC 对接调试** (2026-05-18): 旧平台(192.168.2.100)对接 DMC，Redis 6679 端口打通，usercenter 联通，SSO 验证通过，配置 brain/config.js dmcDomain
 
 ---
 
