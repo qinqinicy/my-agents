@@ -105,6 +105,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - **Word 正文段落** (2026-05-27): `firstLineChars=200`（2字符缩进）、`after=120twips`（6pt 段后）、`before=0`
 - **Word lang 必设** (2026-05-27): docDefaults `eastAsia="zh-CN"`，主题 latin=TNR, ea=黑体/仿宋
 - **heading pStyle 陷阱** (2026-05-27): heading 段落的 pStyle 值为 "1"~"9"（非 "Heading"），判 skip 时要检查数字范围，否则正文 firstLineChars 误应用到标题
+- **Word 表题格式** (2026-05-28): 表号与表名之间须留空格（`表 1 术语` 而非 `表 1术语`），符合中文排版规范
 - **Python threading.Lock 死锁** (2026-05-27): MQTT 回调（on_message）中若调用同锁函数（stop_recording），`threading.Lock` 会死锁。录制服务必须用 `threading.RLock`（可重入锁）。
 - **MQTT 静默超时兜底** (2026-05-27): IoT 设备任务结束时可能不发"结束"消息（如无人机降落时 MQTT 直接断流），需加静默超时机制自动停止录制/释放资源。
 - **FFmpeg 录制优雅退出** (2026-05-27): 用 `SIGTERM`（`proc.terminate()`）+ `wait(timeout=8)` 给 FFmpeg 时间写 MP4 moov 头，超时才 `kill()`。直接 kill 会导致文件无法播放。
@@ -154,7 +155,10 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 | 数据中心文档体系 | Work | 文档填充中 | `AgentSystem/memory/topics/work/横琴全空间无人体系智能数据中心.md` |
 
 ### Recent Work (2026-05)
-- **数据中心文档体系建设** (2026-05-26/27): 7 份框架文档 + 格式规范，填充 数据库集群-架构设计（基于环境台账），55 个样式从模板导入
+- **数据中心文档体系建设** (2026-05-26~28): 7 份框架文档 + 格式规范，已填充 3 份：
+  - `数据库集群-架构设计.docx`：DMC-centric 五层架构，13 表 + 1 架构图
+  - `数据分类存储规划.docx`：双维度分类、冷热分离、容量规划，8 表
+  - `数据中心数据标准规范.docx`：数据元/编码/质量/交换/安全标准，11 表
 - **Word 格式规范** (2026-05-27): Standards/02-Word文档格式规范.md，涵盖编号/表格/正文/题注 OOXML 参数
 - **hmshare-sync 重构** (2026-05-27): 两端独立脚本，数据目录对齐 Hanako，实体目录 + HsM 导出
 - **工作区整理** (2026-05-27): 新增 Standards/ 目录，清理临时文件
