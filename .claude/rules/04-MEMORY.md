@@ -107,8 +107,11 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - **heading pStyle 陷阱** (2026-05-27): heading 段落的 pStyle 值为 "1"~"9"（非 "Heading"），判 skip 时要检查数字范围，否则正文 firstLineChars 误应用到标题
 - **Word 表题格式** (2026-05-28): 表号与表名之间须留空格（`表 1 术语` 而非 `表 1术语`），符合中文排版规范
 - **Python threading.Lock 死锁** (2026-05-27): MQTT 回调（on_message）中若调用同锁函数（stop_recording），`threading.Lock` 会死锁。录制服务必须用 `threading.RLock`（可重入锁）。
+- **Python threading.Lock 死锁（watchdog 版）** (2026-05-28): `silence_watchdog` 持 `threading.Lock` 调用 `stop_recording`，`stop_recording` 内部再抢同一把锁 → 死锁。服务启动后只打印 `[START]` 再无日志，FFmpeg 进程消失。必须用 `threading.RLock`。
 - **MQTT 静默超时兜底** (2026-05-27): IoT 设备任务结束时可能不发"结束"消息（如无人机降落时 MQTT 直接断流），需加静默超时机制自动停止录制/释放资源。
 - **FFmpeg 录制优雅退出** (2026-05-27): 用 `SIGTERM`（`proc.terminate()`）+ `wait(timeout=8)` 给 FFmpeg 时间写 MP4 moov 头，超时才 `kill()`。直接 kill 会导致文件无法播放。
+- **FFmpeg concat 合并同 ID 片段** (2026-05-28): 录制产生大量秒级碎片时，用 `ffmpeg -f concat -safe 0 -i list.txt -c copy` 合并同一 historyId 的同一天片段，合并后删除原始文件。
+- **socat systemd 路径** (2026-05-28): `which socat` 确认实际路径后再写 `ExecStart`，避免 `status=203/EXEC`。实际在 `/usr/bin/socat` 而非 `/usr/local/bin/socat`。
 
 ## Important Decisions
 
@@ -162,7 +165,7 @@ Organize by topic as your lessons grow. A flat list becomes unreadable fast.
 - **Word 格式规范** (2026-05-27): Standards/02-Word文档格式规范.md，涵盖编号/表格/正文/题注 OOXML 参数
 - **hmshare-sync 重构** (2026-05-27): 两端独立脚本，数据目录对齐 Hanako，实体目录 + HsM 导出
 - **工作区整理** (2026-05-27): 新增 Standards/ 目录，清理临时文件
-- **无人机分段录制服务** (2026-05-27): drone_segment_recorder.py + systemd 部署，修复 Lock 死锁和 MQTT 静默超时兜底，运维手册更新至 v2.4
+- **无人机分段录制服务** (2026-05-27~28): drone_segment_recorder.py + systemd 部署，修复 Lock 死锁和 MQTT 静默超时兜底，运维手册更新至 v2.4。05-28 新增：按日期分目录（`segments/YYYY-MM-DD/`）、同 historyId 自动合并片段（`ffmpeg -f concat`）、代理服务器 socat 转发（21020→21019）、socat systemd 路径修复
 
 ### Recent Work (2026-04/05)
 - **流命名规范化** (2026-04-29): machinenest/drone/5gacamera，录制路径 {场景}/{流ID}/，rclone sync 按场景分流
