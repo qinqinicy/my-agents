@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>视频平台运维手册 v2.3</title>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", "思源黑体", sans-serif;
+        line-height: 1.8;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        color: #333;
+        background-color: #fafafa;
+        box-shadow: 0 0 20px rgba(0,0,0,.08);
+    }
+    h1 {
+        font-size: 18px;
+        background-color: #1976d2;
+        color: #ffffff;
+        padding: 14px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(25,118,210,.3);
+        margin-top: 40px;
+    }
+    h2 {
+        font-size: 15px;
+        background-color: #1976d2;
+        color: #ffffff;
+        padding: 10px 16px;
+        border-left: 6px solid #0d47a1;
+        margin-top: 35px;
+    }
+    h3 {
+        font-size: 13px;
+        color: #424242;
+        border-left: 3px solid #1976d2;
+        padding: 0 10px;
+        margin-top: 25px;
+    }
+    h4 {
+        font-size: 12px;
+        color: #616161;
+        margin-top: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        background: white;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    th {
+        background-color: #1976d2;
+        color: white;
+        padding: 12px 15px;
+        text-align: left;
+        font-weight: 600;
+    }
+    td {
+        border-bottom: 1px solid #eee;
+        padding: 10px 15px;
+    }
+    tr:last-child td {
+        border-bottom: none;
+    }
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+    code {
+        background-color: #f4f4f4;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: "Consolas", "Monaco", monospace;
+        color: #d63384;
+        font-size: 12px;
+    }
+    pre {
+        background-color: #263238;
+        color: #aed581;
+        padding: 16px 20px;
+        border-radius: 6px;
+        overflow-x: auto;
+        font-family: "Consolas", "Monaco", "Courier New", monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        margin: 15px 0;
+    }
+    pre code {
+        background: none;
+        padding: 0;
+        color: inherit;
+    }
+    blockquote {
+        background-color: #e3f2fd;
+        border-left: 4px solid #1976d2;
+        padding: 12px 15px;
+        margin: 15px 0;
+        border-radius: 0 4px 4px 0;
+    }
+    blockquote p {
+        margin: 0;
+    }
+    ul, ol {
+        background: white;
+        padding: 15px 15px 15px 35px;
+        border-radius: 6px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    li {
+        margin: 5px 0;
+    }
+    hr {
+        border: none;
+        border-top: 1px solid #eee;
+        margin: 30px 0;
+    }
+
+    /* 封面页样式 */
+    .cover-header {
+        width: 100%;
+        padding: 120px 20px;
+        background-color: #166ede;
+        color: #ffffff;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        justify-content: center;
+        margin-bottom: 0;
+        border-radius: 0;
+    }
+    .cover-title {
+        font-size: 36px;
+        font-weight: 700;
+        margin: 0;
+        background: transparent;
+        border: none;
+        padding: 0;
+        color: #ffffff;
+    }
+    .cover-subtitle {
+        font-size: 18px;
+        font-weight: 400;
+    }
+    .cover-info {
+        font-size: 14px;
+        font-weight: 400;
+        opacity: 0.9;
+    }
+
+    /* 目录区块 */
+    .toc {
+        background: white;
+        padding: 20px 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin: 20px 0;
+    }
+    .toc h2 {
+        margin-top: 0;
+        background: transparent;
+        border: none;
+        padding: 0;
+    }
+    .toc-item {
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+        font-size: 13px;
+    }
+    .toc-item b {
+        color: #1976d2;
+        margin-right: 8px;
+        font-weight: 600;
+    }
+    .toc-item span {
+        color: #999;
+        margin-left: 8px;
+        font-size: 12px;
+    }
+    .toc-item:last-child {
+        border-bottom: none;
+    }
+
+    /* 前言区块 */
+    .frontmatter {
+        background-color: #f5f5f5;
+        padding: 20px 24px;
+        border-radius: 6px;
+        margin: 30px 0;
+    }
+    .frontmatter h2 {
+        background: transparent;
+        color: #1976d2;
+        border: none;
+        border-left: 4px solid #1976d2;
+        padding: 0 12px;
+        margin-top: 0;
+        font-size: 15px;
+    }
+    .frontmatter table {
+        box-shadow: none;
+    }
+
+    /* 警告提示样式 */
+    .warning {
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        padding: 12px 15px;
+        border-radius: 4px;
+        margin: 15px 0;
+    }
+    .info-box {
+        background-color: #e8f5e9;
+        border-left: 4px solid #4caf50;
+        padding: 12px 15px;
+        margin: 15px 0;
+        border-radius: 0 4px 4px 0;
+    }
+
+    /* 附录区块 */
+    .appendix {
+        background: #f9f9f9;
+        padding: 28px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        margin: 20px 0;
+    }
+
+    /* 脚页样式 */
+    footer {
+        text-align: center;
+        color: #999;
+        margin-top: 50px;
+        padding: 20px;
+        border-top: 1px solid #eee;
+        font-size: 11px;
+    }
+
+    /* 打印样式 */
+    @media print {
+        body {
+            background: white;
+            box-shadow: none;
+        }
+        .cover-header {
+            border-radius: 0;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- 封面页 -->
+<div class="cover-header">
+    <div class="cover-title">视频平台运维手册</div>
+    <div class="cover-subtitle">横琴全空间无人体系智能数据中心项目</div>
+    <div class="cover-info">版本: v2.6 | 编写日期: 2026-05-29</div>
+    <div class="cover-info">作者: 秦 | 审核人: 秦</div>
+    <div class="cover-info">状态: 正式发布</div>
+</div>
+
+<!-- 目录 -->
+<h1 style="background:#fff;color:#1976d2;border-bottom:3px solid #1976d2;border-radius:0;box-shadow:none;text-align:center;padding:14px">目  录</h1>
+<div class="toc">
+  <div class="toc-item"><b>1.</b> 概述 <span>1.1-1.4</span></div>
+  <div class="toc-item"><b>2.</b> 系统架构 <span>2.1-2.4</span></div>
+  <div class="toc-item"><b>3.</b> 安装配置 <span>3.1-3.3</span></div>
+  <div class="toc-item"><b>4.</b> 日常运维 <span>4.1-4.3</span></div>
+  <div class="toc-item"><b>5.</b> 接入配置 <span>5.1-5.5</span></div>
+  <div class="toc-item"><b>6.</b> 监控运维 <span>6.1-6.5</span></div>
+  <div class="toc-item"><b>7.</b> 数据管理 <span>7.1-7.3</span></div>
+  <div class="toc-item"><b>8.</b> 故障排除 <span>8.1-8.2</span></div>
+  <div class="toc-item"><b>9.</b> 附录 <span>9.1-9.3</span></div>
+  <div class="toc-item"><b>10.</b> 修订记录 <span>10.1</span></div>
+</div>
+
+---
+
+<!-- 前言修订记录 -->
+<div class="frontmatter">
+<h2>修订记录</h2>
+
+<table>
+<tr><th>版本</th><th>日期</th><th>作者</th><th>变更内容</th></tr>
+<tr><td>v1.0</td><td>2026-04-21</td><td>秦</td><td>初始版本 - ZLM + StreamUI 基础配置</td></tr>
+<tr><td>v1.1</td><td>2026-04-22</td><td>秦</td><td>新增 MinIO 存储、rclone 同步、多场景扩展</td></tr>
+<tr><td>v1.2</td><td>2026-04-22</td><td>秦</td><td>补充 addStreamProxy API、录制配置、StreamUI 路径修复、同步脚本</td></tr>
+<tr><td>v1.3</td><td>2026-04-22</td><td>秦</td><td>按规范模板重组章节结构</td></tr>
+<tr><td>v1.4</td><td>2026-04-23</td><td>秦</td><td>按规范模板更新：封面页、前置修订记录、10.1版本历史格式</td></tr>
+<tr><td>v1.5</td><td>2026-04-23</td><td>秦</td><td>按规范模板更新：封面页新样式、目录样式、#166ede商务蓝配色</td></tr>
+<tr><td>v1.6</td><td>2026-04-23</td><td>秦</td><td>按规范模板更新：目录区域新结构（catalog-title-wrap/catalog-divider）</td></tr>
+<tr><td>v1.7</td><td>2026-04-23</td><td>秦</td><td>按规范模板更新：目录改用 .toc 结构（白底卡片式）</td></tr>
+<tr><td>v1.8</td><td>2026-04-23</td><td>秦</td><td>按规范模板更新：目录标题独立 h1 样式（白底蓝字下划线）</td></tr>
+<tr><td>v1.9</td><td>2026-04-23</td><td>秦</td><td>按规范模板更新：body 背景改为 #fafafa</td></tr>
+<tr><td>v2.0</td><td>2026-04-29</td><td>秦</td><td><strong>重大更新</strong>：流命名规范化（machinenest/drone/5gacamera），录制路径改为 {场景}/{流ID} 结构，rclone sync 改为按场景自动分流脚本</td></tr>
+<tr><td>v2.1</td><td>2026-04-29</td><td>秦</td><td>新增 S3 API 访问方式、MinIO IAM 权限管理、对外接口说明；清理 yyzx 场景（仅保留 cszl）</td></tr>
+<tr><td>v2.2</td><td>2026-05-21</td><td>秦</td><td><strong>重大更新</strong>：5gacamera 改用 systemd ffmpeg 守护（copy 模式）；新增非标 RTMP 源处理方案；新增拉流代理超时掉线、FFmpeg 推拉流失败等故障排查案例</td></tr>
+<tr><td>v2.3</td><td>2026-05-22</td><td>秦</td><td><strong>重大更新</strong>：drone 流恢复在线，接入方式改为 systemd ffmpeg（RTMP 代理）；补充代理服务器 MediaMTX + nginx 架构；补充 zlm-drone.service 配置；更新无人机源地址为 MediaMTX RTMP 代理</td></tr>
+<tr><td>v2.4</td><td>2026-05-27</td><td>秦</td><td><strong>重大更新</strong>：新增无人机分段录制服务（5.5 节），按 historyId 自动切分视频片段；新增 drone_segment_recorder.py 与 systemd 服务配置；segments 目录同步规则纳入 rclone sync</td></tr>
+<tr><td>v2.5</td><td>2026-05-29</td><td>秦</td><td><strong>重大更新</strong>：5.5 节全面升级——按日期分目录存储、同 historyId 自动合并片段、faststart 重封装支持播放器拖动进度条；新增 socat RTMP 代理（21020→21019）架构；修复 threading.Lock 死锁为 RLock；MQTT 主题修正为 /ucare/third/uavState；HISTORY_SILENCE_TIMEOUT 调整为 30s</td></tr>
+<tr><td>v2.6</td><td>2026-05-29</td><td>秦</td><td><strong>重大更新</strong>：修复 StreamUI 播放页"无录像"问题——FFmpeg 录制注入 creation_time 元数据（UTC 格式）；faststart 输出路径改为 /tmp 避免 FFmpeg exit 234；更新文件命名规范；MinIO 同步覆盖旧文件</td></tr>
+</table>
+</div>
+
+---
+
+<h1 id="sec1">1. 概述</h1>
+
+<h2>1.1 手册目的与范围</h2>
+
+<p><strong>目的</strong>：规范 ZLMediaKit + StreamUI + MinIO 视频平台的运维操作，保障系统稳定运行。</p>
+
+<h3>适用范围</h3>
+<ul>
+<li>ZLMediaKit 流媒体服务器运维</li>
+<li>StreamUI 录像管理平台运维</li>
+<li>MinIO 对象存储配置与运维</li>
+<li>rclone 同步与访问服务运维</li>
+</ul>
+
+<h3>适用对象</h3>
+<ul>
+<li>运维工程师</li>
+<li>系统管理员</li>
+<li>技术支持人员</li>
+</ul>
+
+<h2>1.2 系统简介</h2>
+
+<table>
+<tr><th>组件</th><th>功能</th><th>端口</th><th>版本</th></tr>
+<tr><td>ZLMediaKit</td><td>流媒体拉流、转码、录制</td><td>80 (HTTP), 1935 (RTMP), 554 (RTSP)</td><td>master</td></tr>
+<tr><td>StreamUI</td><td>录像回看 Web 管理界面</td><td>10800</td><td>latest</td></tr>
+<tr><td>MinIO</td><td>录像文件 S3 兼容存储</td><td>9000 (API), 9001 (Console)</td><td>-</td></tr>
+<tr><td>rclone</td><td>文件同步与 HTTP 服务</td><td>8091/8092</td><td>1.68+</td></tr>
+</table>
+
+<h2>1.3 术语与缩写</h2>
+
+<table>
+<tr><th>术语</th><th>全称</th><th>说明</th></tr>
+<tr><td>ZLM</td><td>ZLMediaKit</td><td>开源流媒体服务器</td></tr>
+<tr><td>StreamUI</td><td>StreamUI</td><td>录像管理前端</td></tr>
+<tr><td>MinIO</td><td>MinIO</td><td>S3 兼容对象存储</td></tr>
+<tr><td>rclone</td><td>rclone</td><td>云存储同步工具</td></tr>
+<tr><td>HLS</td><td>HTTP Live Streaming</td><td>HTTP 直播流协议</td></tr>
+<tr><td>RTMP</td><td>Real-Time Messaging Protocol</td><td>实时消息协议</td></tr>
+<tr><td>RTSP</td><td>Real Time Streaming Protocol</td><td>实时流协议</td></tr>
+</table>
+
+<h2>1.4 参考文献</h2>
+
+<ul>
+<li>ZLMediaKit 官方文档：https://github.com/ZLMediaKit/ZLMediaKit</li>
+<li>StreamUI GitHub：https://github.com/nicomachus/StreamUI</li>
+<li>MinIO 官方文档：https://min.io/docs</li>
+<li>rclone 官方文档：https://rclone.org/docs/</li>
+</ul>
+
+---
+
+<h1 id="sec2">2. 系统架构</h1>
+
+<h2>2.1 硬件环境</h2>
+
+<table>
+<tr><th>服务器</th><th>IP</th><th>角色</th><th>配置</th></tr>
+<tr><td>ZLM/StreamUI 服务器</td><td>10.129.80.242</td><td>流媒体服务、录像存储</td><td>-</td></tr>
+<tr><td>MinIO 服务器</td><td>10.129.80.211</td><td>对象存储</td><td>-</td></tr>
+<tr><td>流媒体代理服务器</td><td>10.129.80.244</td><td>运行 MediaMTX（RTMP/HLS）和 nginx（HTTP-FLV 转发）</td><td>端口 1935/8888/21021</td></tr>
+</table>
+
+<h2>2.2 软件架构</h2>
+
+<pre><code>[无人机设备] → [流媒体代理 10.129.80.244:21021]
+       │
+       ▼
+[ZLMediaKit] ──录制──► [/opt/media/www/record/]
+       │                    │
+       │                    ▼
+       │              [rclone sync]
+       │                    │
+       ▼                    ▼
+[StreamUI]           [MinIO cszl-media]
+  │                        │
+  │                        ▼
+[Web UI]          [rclone serve :8091]
+                       │
+                       ▼
+              [第三方访问]</code></pre>
+
+<h2>2.3 网络拓扑</h2>
+
+<table>
+<tr><th>源 → 目标</th><th>端口</th><th>用途</th></tr>
+<tr><td>ZLM → 流媒体代理</td><td>21021</td><td>拉取视频流</td></tr>
+<tr><td>ZLM → MinIO</td><td>9000</td><td>录像同步上传</td></tr>
+<tr><td>第三方 → ZLM 服务器</td><td>8091</td><td>视频访问</td></tr>
+<tr><td>管理员 → StreamUI</td><td>10800</td><td>录像管理</td></tr>
+</table>
+
+<h2>2.4 第三方依赖</h2>
+
+<table>
+<tr><th>依赖服务</th><th>地址</th><th>说明</th></tr>
+<tr><td>流媒体代理</td><td>10.129.80.244:21021</td><td>HTTP-FLV 流代理（nginx）</td></tr>
+<tr><td>MediaMTX</td><td>10.129.80.244:1935/8888</td><td>RTMP 拉流代理 + HLS 输出</td></tr>
+<tr><td>UAV 源端</td><td>10.129.23.248:21019/21021</td><td>无人机推流边缘服务器</td></tr>
+<tr><td>Docker Hub</td><td>-</td><td>ZLMediaKit 镜像源</td></tr>
+<tr><td>rclone.org</td><td>-</td><td>rclone 下载源</td></tr>
+</table>
+
+---
+
+<h1 id="sec3">3. 安装配置</h1>
+
+<h2>3.1 服务端口配置</h2>
+
+<table>
+<tr><th>服务</th><th>端口</th><th>用途</th></tr>
+<tr><td>ZLMediaKit HTTP/API</td><td>80</td><td>Web 管理、API 调用</td></tr>
+<tr><td>ZLMediaKit RTMP</td><td>1935</td><td>RTMP 推拉流</td></tr>
+<tr><td>ZLMediaKit RTSP</td><td>554</td><td>RTSP 推拉流</td></tr>
+<tr><td>StreamUI</td><td>10800</td><td>录像管理 Web 界面</td></tr>
+<tr><td>MinIO API</td><td>9000</td><td>S3 兼容存储 API</td></tr>
+<tr><td>MinIO Console</td><td>9001</td><td>Web 管理界面</td></tr>
+<tr><td>rclone serve (cszl)</td><td>8091</td><td>第三方视频访问</td></tr>
+<tr><td>rclone serve (cszl)</td><td>8091</td><td>第三方视频访问</td></tr>
+</table>
+
+<h2>3.2 配置文件说明</h2>
+
+<h3>Docker 部署</h3>
+
+<pre><code># ZLM Docker 部署（host 网络模式）
+docker run -d --name zlm --network host \
+  -v /opt/media/conf:/opt/media/conf \
+  -v /opt/media/www:/opt/media/www \
+  zlmediakit/zlmediakit:master
+
+# StreamUI Docker 部署
+docker run -d --name streamui -p 10800:8080 \
+  -v /opt/media/www:/opt/media/www/record \
+  -v /opt/streamui/db:/opt/streamui/db \
+  nicomachus/streamui:latest</code></pre>
+
+<h4>录像路径修复</h4>
+
+<p><strong>问题</strong>：StreamUI 访问录像返回 <code>/opt/media/bin/www/record directory not found</code></p>
+
+<p><strong>原因</strong>：StreamUI 代码中写死了 <code>/opt/media/bin/www</code> 路径，而实际录像存储在 <code>/opt/media/www</code></p>
+
+<p><strong>解决方案</strong>：</p>
+
+<pre><code>ln -sf /opt/media/www /opt/media/bin/www
+ls -la /opt/media/bin/www  # 应显示 -> /opt/media/www</code></pre>
+
+<h3>rclone 安装与配置</h3>
+
+<pre><code># 下载安装 rclone
+curl -O https://downloads.rclone.org/rclone-current-linux-amd64.zip
+unzip rclone-current-linux-amd64.zip
+cp rclone-*-linux-amd64/rclone /opt/media/tools/
+chmod +x /opt/media/tools/rclone
+
+# 配置 rclone remote（交互式）
+/opt/media/tools/rclone config</code></pre>
+
+<pre><code># rclone.conf 配置示例
+[minio]
+type = s3
+provider = Other
+endpoint = http://10.129.80.211:9000
+access_key_id = minioadmin
+secret_access_key = Ka93@fnnbd2A
+bucket_policy = false
+</code></pre>
+
+<h3>systemd 服务配置</h3>
+
+<pre><code># /etc/systemd/system/rclone-minio.service
+[Unit]
+Description=rclone MinIO Serve for cszl
+After=network.target minio.service
+
+[Service]
+Type=simple
+User=root
+ExecStart=/opt/media/tools/rclone serve http minio:cszl-media/cszl/ --addr 0.0.0.0:8091 --user cszlkey --pass 'Ka93@fnnbd2A' --vfs-cache-mode writes --bind 0.0.0.0
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+<h2>3.3 服务启停</h2>
+
+<h3>ZLMediaKit</h3>
+
+<pre><code># 启动
+docker start zlm
+
+# 停止
+docker stop zlm
+
+# 重启
+docker restart zlm
+
+# 查看日志
+docker logs zlm --tail 100
+
+# 进入容器
+docker exec -it zlm /bin/bash</code></pre>
+
+<h3>rclone 服务</h3>
+
+<pre><code># 启动
+systemctl start rclone-minio
+
+# 停止
+systemctl stop rclone-minio
+
+# 重启
+systemctl restart rclone-minio
+
+# 状态
+systemctl status rclone-minio
+
+# 日志
+journalctl -u rclone-minio -f</code></pre>
+
+---
+
+<h1 id="sec4">4. 日常运维</h1>
+
+<h2>4.1 服务状态巡检</h2>
+
+<p><strong>目的</strong>：确认所有服务正常运行，视频流正常录制</p>
+
+<p><strong>前置条件</strong>：</p>
+<ul>
+<li>具有服务器 SSH 访问权限</li>
+<li>Docker 服务运行中</li>
+</ul>
+
+<p><strong>操作步骤</strong>：</p>
+<ol>
+<li>检查 Docker 容器状态</li>
+<li>检查 rclone 服务状态</li>
+<li>检查录像目录空间</li>
+<li>验证视频流录制状态</li>
+</ol>
+
+<p><strong>验证方法</strong>：</p>
+<ul>
+<li><code>docker ps</code> 显示 zlm、streamui 运行中</li>
+<li><code>systemctl status rclone-minio</code> 显示 active</li>
+<li><code>df -h</code> 数据盘使用率 < 80%</li>
+</ul>
+
+<h3>巡检命令</h3>
+
+<pre><code># Docker 服务状态
+docker ps | grep -E "zlm|streamui"
+
+# rclone 服务状态
+systemctl status rclone-minio
+
+# 磁盘使用
+df -h /opt/media/www
+
+# ZLM 流列表
+curl -s "http://127.0.0.1:80/index/api/getMediaList?secret=mysecret123"
+
+# MinIO 桶使用
+/root/mc du minio/csZl-media</code></pre>
+
+<h2>4.2 备份管理</h2>
+
+<p><strong>目的</strong>：防止配置丢失，保障录像安全</p>
+
+<p><strong>前置条件</strong>：</p>
+<ul>
+<li>MinIO 服务正常</li>
+<li>rclone 已配置</li>
+</ul>
+
+<p><strong>操作步骤</strong>：</p>
+<ol>
+<li>备份 ZLM 配置目录</li>
+<li>验证录像同步状态</li>
+<li>备份 StreamUI 数据库</li>
+</ol>
+
+<p><strong>验证方法</strong>：</p>
+<ul>
+<li>配置文件存在于 <code>/data/zlm/conf/</code></li>
+<li>MinIO 中可查到当日录像</li>
+<li>数据库文件存在于 <code>/opt/streamui/db/</code></li>
+</ul>
+
+<h3>备份策略</h3>
+
+<table>
+<tr><th>备份内容</th><th>频率</th><th>保留周期</th></tr>
+<tr><td>ZLM 配置</td><td>每周</td><td>30 天</td></tr>
+<tr><td>录像文件</td><td>实时同步到 MinIO</td><td>永久</td></tr>
+<tr><td>StreamUI 数据库</td><td>每周</td><td>30 天</td></tr>
+</table>
+
+<h2>4.3 日志管理</h2>
+
+<table>
+<tr><th>日志位置</th><th>内容</th><th>保留</th></tr>
+<tr><td><code>docker logs zlm</code></td><td>ZLM 运行日志</td><td>容器内</td></tr>
+<tr><td><code>/opt/media/logs/sync.log</code></td><td>录像同步日志</td><td>7 天</td></tr>
+<tr><td><code>/opt/media/logs/sync_poll.log</code></td><td>实时同步日志</td><td>7 天</td></tr>
+<tr><td><code>journalctl -u rclone-minio</code></td><td>rclone 服务日志</td><td>systemd 管理</td></tr>
+</table>
+
+<pre><code># 查看 ZLM 日志
+docker logs zlm --tail 100
+
+# 查看同步日志
+tail -f /opt/media/logs/sync.log
+
+# 查看 rclone 服务日志
+journalctl -u rclone-minio -n 50</code></pre>
+
+---
+
+<h1 id="sec5">5. 接入配置</h1>
+
+<h2>5.1 拉流配置（addStreamProxy API）</h2>
+
+<p><strong>功能</strong>：通过 ZLM API 动态添加拉流任务，将外部视频流拉取到本地并录制。</p>
+
+<p><strong>前置条件</strong>：</p>
+<ul>
+<li>ZLM 服务运行中</li>
+<li>流媒体代理地址可达</li>
+<li>已知 API 密钥（mysecret123）</li>
+</ul>
+
+<p><strong>操作步骤</strong>：</p>
+<ol>
+<li>构造 addStreamProxy 请求</li>
+<li>发送 POST 请求到 ZLM API</li>
+<li>验证流是否成功创建</li>
+</ol>
+
+<p><strong>验证方法</strong>：</p>
+<ul>
+<li>API 返回 <code>{"code":0,"msg":"success"}</code></li>
+<li>流列表中出现新流：<code>curl -s "http://127.0.0.1:80/index/api/getMediaList?secret=mysecret123"</code></li>
+</ul>
+
+<h3>API 端点</h3>
+<pre><code>POST http://10.129.80.242:80/index/api/addStreamProxy
+Content-Type: application/json</code></pre>
+
+<h3>请求参数</h3>
+
+<table>
+<tr><th>参数</th><th>类型</th><th>必填</th><th>说明</th></tr>
+<tr><td>secret</td><td>string</td><td>是</td><td>API 密钥（mysecret123）</td></tr>
+<tr><td>vhost</td><td>string</td><td>是</td><td>虚拟主机（填 <code>__defaultVhost__</code>）</td></tr>
+<tr><td>app</td><td>string</td><td>是</td><td>应用名称（如 live）</td></tr>
+<tr><td>stream</td><td>string</td><td>是</td><td>流名称（如 main）</td></tr>
+<tr><td>url</td><td>string</td><td>是</td><td>源流地址（rtmp/rtsp/hls）</td></tr>
+<tr><td>enable_hls</td><td>bool</td><td>否</td><td>启用 HLS 录制（默认 true）</td></tr>
+<tr><td>enable_mp4</td><td>bool</td><td>否</td><td>启用 MP4 录制（默认 false）</td></tr>
+<tr><td>hls_demand</td><td>bool</td><td>否</td><td>HLS 按需模式（0=连续录制）</td></tr>
+</table>
+
+<h3>请求示例</h3>
+
+<p><strong>场景：cszl（城市治理）</strong></p>
+
+<pre><code>curl -X POST "http://10.129.80.242:80/index/api/addStreamProxy" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "secret": "mysecret123",
+    "vhost": "__defaultVhost__",
+    "app": "cszl",
+    "stream": "machinenest",
+    "url": "http://10.129.80.244:21021/apron/UA004768282.flv?eip=10.128.131.250&token=1775546994-NULL-5CA507286EEB7CE9DE157E0F7F136E2F-FLY&vhost=saveVhost",
+    "enable_hls": true,
+    "enable_mp4": true
+  }'</code></pre>
+
+<p><strong>流命名规范</strong>：</p>
+
+<table>
+<tr><th>流 ID</th><th>内容</th><th>源地址</th><th>接入方式</th><th>状态</th></tr>
+<tr><td>machinenest</td><td>机巢</td><td>http://10.129.80.244:21021/apron/UA004768282.flv?...（带 token）</td><td>ZLM 拉流代理</td><td>在线</td></tr>
+<tr><td>drone</td><td>无人机</td><td>rtmp://10.129.80.244:1935/uav（MediaMTX RTMP 代理，源端 10.129.23.248:21019）</td><td>systemd ffmpeg（RTMP 代理）</td><td>在线</td></tr>
+<tr><td>5gacamera</td><td>5G-A基站摄像头</td><td>rtmp://10.129.80.244/proxy_example</td><td>systemd ffmpeg（copy 模式）</td><td>在线</td></tr>
+</table>
+
+<h3>常见错误</h3>
+
+<table>
+<tr><th>错误信息</th><th>原因</th><th>解决方案</th></tr>
+<tr><td>Required parameter missed: vhost</td><td>缺少 vhost 参数</td><td>添加 <code>"vhost":"__defaultVhost__"</code></td></tr>
+<tr><td>connection refused</td><td>源流地址不可达</td><td>检查源流服务器和网络连通性</td></tr>
+<tr><td>wait http response header timeout</td><td>网络隔离或防火墙</td><td>Docker 使用 <code>--network host</code></td></tr>
+<tr><td>rtmp url非法</td><td>RTMP 源格式不符合 ZLM 拉流代理要求</td><td>改用 systemd ffmpeg 方式接入</td></tr>
+<tr><td>end of file</td><td>RTMP URL 路径在代理服务器上不存在</td><td>确认代理服务器实际流路径，或改用 ffmpeg 拉流</td></tr>
+</table>
+
+<h2>5.1.1 非标 RTMP 源处理方案</h2>
+
+<p><strong>适用场景</strong>：ZLM <code>addStreamProxy</code> 拉流代理不支持某些非标 RTMP 源格式（如 <code>rtmp://host/proxy_example</code>，缺少标准 app/stream 结构）。</p>
+
+<p><strong>解决方案</strong>：使用 systemd 守护 ffmpeg 进程拉取源流并推送到本地 ZLM。</p>
+
+<h3>5gacamera 示例配置</h3>
+
+<pre><code># /etc/systemd/system/zlm-5gacamera.service
+[Unit]
+Description=ZLM 5gacamera FFmpeg Relay
+After=docker.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/docker exec zlm /usr/bin/ffmpeg -re -i rtmp://10.129.80.244/proxy_example -c copy -f flv rtmp://127.0.0.1/cszl/5gacamera
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+<p><strong>管理命令</strong>：</p>
+<pre><code>systemctl start zlm-5gacamera
+systemctl stop zlm-5gacamera
+systemctl restart zlm-5gacamera
+systemctl status zlm-5gacamera</code></pre>
+
+<p><strong>说明</strong>：</p>
+<ul>
+<li>使用 <code>-c copy</code> 不转码，CPU 占用极低</li>
+<li>流推送到 <code>rtmp://127.0.0.1/cszl/5gacamera</code>，ZLM 本地接收</li>
+<li>StreamUI 在<strong>推流接入</strong>页面可见</li>
+<li>如需录制，在 ZLM Web「FFmpeg推拉流」页面勾选 MP4/HLS 录制，或配置 ZLM 全局录制</li>
+</ul>
+
+<h2>5.2 录制配置</h2>
+
+<p><strong>功能</strong>：配置 HLS 和 MP4 录像录制参数</p>
+
+<p><strong>前置条件</strong>：ZLM 服务运行中</p>
+
+<p><strong>操作步骤</strong>：</p>
+<ol>
+<li>修改 ZLM 配置文件</li>
+<li>重启 ZLM 容器</li>
+<li>验证录制功能</li>
+</ol>
+
+<p><strong>验证方法</strong>：</p>
+<ul>
+<li>录像目录出现 .ts 或 .mp4 文件</li>
+<li><code>curl -s "http://127.0.0.1:80/index/api/getMediaList?secret=mysecret123"</code> 显示录制中的流</li>
+</ul>
+
+<h3>录制路径结构</h3>
+
+<p><strong>本地录制路径</strong>：<code>/opt/media/www/record/{场景}/{流ID}/</code></p>
+
+<pre><code>/opt/media/www/record/
+└── cszl/                    # 场景名（应用名）
+    ├── machinenest/          # 机巢流
+    │   └── 2026-04-28/      # 按日期分目录
+    │       └── *.mp4
+    ├── drone/               # 无人机流
+    │   └── 2026-04-28/
+    └── 5gacamera/           # 5G-A摄像头流
+        └── 2026-04-28/</code></pre>
+
+<h3>HLS 连续录制配置</h3>
+
+<pre><code>[hls]
+hls_demand=0          # 0=连续录制，1=按需录制
+hls_save_path=/opt/media/www  # 保存根目录
+hls_ts_reserve=3      # 保留 .ts 切片数量</code></pre>
+
+<h3>MP4 录制配置</h3>
+
+<pre><code>[mp4]
+mp4_save_path=/opt/media/www/record  # MP4 保存路径
+enable_mp4=1          # 启用 MP4 录制
+mp4_max_size=100      # 单个 MP4 文件最大大小（MB）</code></pre>
+
+<h3>录像文件命名规则</h3>
+
+<table>
+<tr><th>类型</th><th>命名格式</th><th>示例</th></tr>
+<tr><td>HLS 目录</td><td><code>{app}/{stream}/</code></td><td><code>live/cszl/</code></td></tr>
+<tr><td>HLS m3u8</td><td><code>{app}/{stream}/live.m3u8</code></td><td><code>live/cszl/live.m3u8</code></td></tr>
+<tr><td>MP4 文件</td><td><code>{stream}_{时间戳}.mp4</code></td><td><code>cszl_20260422153000.mp4</code></td></tr>
+</table>
+
+<h2>5.3 录像同步配置</h2>
+
+<p><strong>功能</strong>：配置 rclone 将本地录像同步到 MinIO 存储</p>
+
+<p><strong>前置条件</strong>：</p>
+<ul>
+<li>rclone 已安装并配置</li>
+<li>MinIO 服务正常</li>
+</ul>
+
+<p><strong>操作步骤</strong>：</p>
+<ol>
+<li>创建同步脚本</li>
+<li>配置定时任务</li>
+<li>验证同步结果</li>
+</ol>
+
+<p><strong>验证方法</strong>：</p>
+<ul>
+<li><code>/root/mc ls minio/csZl-media/cszl/</code> 显示同步的文件</li>
+<li>同步日志无错误</li>
+</ul>
+
+<h3>sync_by_scene.sh 脚本</h3>
+
+<pre><code>#!/bin/bash
+set -e
+
+LOG="/opt/media/logs/sync.log"
+SRC_DIR="/opt/media/www/record"
+
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG"
+}
+
+RCLONE="/opt/media/tools/rclone"
+
+for scene_dir in "$SRC_DIR"/*/; do
+    [[ -d "$scene_dir" ]] || continue
+    scene=$(basename "$scene_dir")
+
+    # 跳过非场景目录
+    if [[ "$scene" == "live" ]] || [[ "$scene" == "proxy_example" ]]; then
+        continue
+    fi
+
+    # 检查桶是否存在
+    if ! $RCLONE ls "minio:${scene}-media/" --max-depth 0 &>/dev/null; then
+        log "WARNING: Bucket ${scene}-media not found, skipping sync"
+        continue
+    fi
+
+    log "=== Syncing scene: $scene ==="
+    $RCLONE sync "$scene_dir" "minio:${scene}-media/" \
+        --exclude "**/.*" \
+        --transfers 4 \
+        --checkers 8 \
+        --log-level INFO \
+        -P \
+        2>&1 | tee -a "$LOG"
+
+    log "=== Done: $scene ==="
+done</code></pre>
+
+<p><strong>同步逻辑</strong>：</p>
+<ul>
+<li>遍历 <code>/opt/media/www/record/</code> 下所有场景目录</li>
+<li>跳过 <code>live</code>、<code>proxy_example</code> 等非场景目录</li>
+<li>检查 MinIO 桶是否存在，不存在则跳过（不报错）</li>
+<li>同步到对应桶：<code>minio:{场景}-media/{场景}/</code></li>
+</ul>
+
+<p><strong>路径映射</strong>：</p>
+
+<table>
+<tr><th>本地路径</th><th>MinIO 路径</th></tr>
+<tr><td>/opt/media/www/record/cszl/machinenest/</td><td>cszl-media/cszl/machinenest/</td></tr>
+<tr><td>/opt/media/www/record/cszl/drone/</td><td>cszl-media/cszl/drone/</td></tr>
+<tr><td>/opt/media/www/record/cszl/5gacamera/</td><td>cszl-media/cszl/5gacamera/</td></tr>
+</table>
+
+<h3>定时任务配置</h3>
+
+<pre><code># 添加到 crontab，每 5 分钟执行一次
+crontab -e
+
+# 内容：
+*/5 * * * * /opt/media/tools/sync_by_scene.sh >> /opt/media/logs/sync.log 2>&1</code></pre>
+
+<h3>手动执行</h3>
+
+<pre><code># 手动执行同步（实时显示进度）
+/opt/media/tools/rclone sync /opt/media/www/record/ minio:cszl-media/cszl/ --exclude "**/.*" -P</code></pre>
+
+<h2>5.4 多场景接入</h2>
+
+<p><strong>功能</strong>：为新业务场景创建独立的录像存储和访问通道</p>
+
+<p><strong>前置条件</strong>：</p>
+<ul>
+<li>新场景已在业务平台注册</li>
+<li>获得新场景的流媒体地址</li>
+</ul>
+
+<p><strong>操作步骤</strong>：</p>
+<ol>
+<li>MinIO 服务器：创建新桶</li>
+<li>MinIO 服务器：创建 Service Account</li>
+<li>ZLM 服务器：配置 rclone remote</li>
+<li>ZLM 服务器：创建 systemd 服务</li>
+</ol>
+
+<p><strong>验证方法</strong>：</p>
+<ul>
+<li><code>mc ls minio/cszl-media</code> 显示桶存在</li>
+<li><code>rclone ls minio:</code> 显示 remote 可用</li>
+<li>第三方可访问 <code>http://IP:8091/</code></li>
+</ul>
+
+<p><strong>后续处理</strong>：</p>
+<ul>
+<li>添加定时同步任务</li>
+<li>更新本手册场景配置表</li>
+</ul>
+
+<h3>场景配置汇总</h3>
+
+<table>
+<tr><th>场景</th><th>桶名</th><th>Service Account</th><th>Secret Key</th><th>访问端口</th><th>rclone remote</th><th>状态</th></tr>
+<tr><td>cszl（城市治理）</td><td>cszl-media</td><td>cszlkey</td><td>Ka93@fnnbd2A</td><td>8091</td><td>minio</td><td>已配置</td></tr>
+<tr><td>zhdg（智慧灯杆）</td><td>待创建</td><td>待创建</td><td>-</td><td>待配置</td><td>待配置</td><td>待接入</td></tr>
+</table>
+
+<p><strong>注</strong>：其他场景（yyzx 等）已清理，当前仅保留 cszl 场景。</p>
+
+<h2>5.4 新增场景流程</h2>
+
+<p><strong>适用场景</strong>：新增一个视频监控场景（如 zhdg 智慧灯杆），包含多个摄像头/无人机/机巢等流。</p>
+
+<p><strong>新增步骤</strong>：</p>
+
+<ol>
+<li><strong>ZLM Web 添加流</strong>：
+  <ul>
+    <li>应用名：场景名（如 <code>zhdg</code>）</li>
+    <li>流ID：按内容命名（如 <code>camera01</code>、<code>drone01</code>）</li>
+    <li>源地址：对应的拉流 URL</li>
+  </ul>
+</li>
+<li><strong>MinIO 创建桶</strong>：
+  <pre><code># 在 MinIO 服务器上
+/root/mc mb minio/zhdg-media --ignore-existing</code></pre>
+</li>
+<li><strong>自动同步</strong>：
+  <ul>
+    <li>无需修改 sync_by_scene.sh 脚本</li>
+    <li>下次 cron 执行时自动检测到新目录并同步</li>
+    <li>桶不存在则跳过，不报错</li>
+  </ul>
+</li>
+</ol>
+
+<p><strong>示例：新增 zhdg 场景</strong>：</p>
+
+<table>
+<tr><th>步骤</th><th>操作</th><th>结果</th></tr>
+<tr><td>1</td><td>ZLM 添加 <code>zhdg/camera01</code></td><td>本地 <code>/opt/media/www/record/zhdg/camera01/</code></td></tr>
+<tr><td>2</td><td>MinIO 创建 <code>zhdg-media</code> 桶</td><td>桶就绪</td></tr>
+<tr><td>3</td><td>cron 自动同步</td><td><code>zhdg-media/zhdg/camera01/</code></td></tr>
+</table>
+
+---
+
+<h2>5.5 无人机分段录制配置</h2>
+
+<p><strong>功能</strong>：按无人机任务 <code>historyId</code> 自动切分视频片段，实现"一次任务 = 一个视频文件"。支持多架无人机混推、按日期分目录、同任务自动合并片段。</p>
+
+<p><strong>原理</strong>：MQTT 监听 <code>/ucare/third/uavState</code>，根据 <code>historyId</code> 与 <code>height</code> 字段状态驱动 FFmpeg 分段录制。每个 <code>historyId</code> 独立管理生命周期，互不干扰。</p>
+
+<ul>
+<li><code>height &gt; 0</code> 且检测到新的 <code>historyId</code> → 启动 FFmpeg 录制</li>
+<li><code>height == 0</code>（同一 <code>historyId</code> 从飞行状态降至 0）→ 停止录制、faststart 重封装、合并同 ID 片段并保存</li>
+<li>MQTT 静默超过 30 秒（无人机任务结束直接断流不发 height=0）→ 自动超时停止</li>
+</ul>
+
+<p><strong>与现有录制并行</strong>：ZLM 持续录制不受影响，分段录制作为独立通道运行。</p>
+
+<h3>代理链路</h3>
+
+<p>无人机源端（<code>10.129.23.248:21019</code>）→ 代理服务器 socat 转发（<code>10.129.80.244:21020</code>）→ 视频服务器 FFmpeg 拉流录制。</p>
+
+<pre><code># 代理服务器 systemd 服务：/etc/systemd/system/socat-rtmp-proxy.service
+[Unit]
+Description=RTMP Port Forward Proxy (21020 -> upstream:21019)
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/socat TCP4-LISTEN:21020,fork TCP4:10.129.23.248:21019
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+<h3>文件输出</h3>
+
+<table>
+<tr><th>项目</th><th>路径/值</th></tr>
+<tr><td>录制根目录</td><td><code>/opt/media/www/record/cszl/drone-segment/</code></td></tr>
+<tr><td>按日期分目录</td><td><code>drone-segment/2026-05-29/{historyId}_{start}_{end}.mp4</code></td></tr>
+<tr><td>同 historyId 合并</td><td>每次停止后自动合并当天同一 ID 的所有片段</td></tr>
+<tr><td>播放器可拖动</td><td>停止后执行 faststart 重封装，moov atom 移到文件头</td></tr>
+<tr><td>元数据</td><td>自动注入 <code>creation_time</code>（UTC 格式），供 StreamUI 解析时间轴</td></tr>
+<tr><td>MinIO 同步</td><td>由 <code>sync_by_scene.sh</code> 自动递归同步到 <code>cszl-media/cszl/drone-segment/YYYY-MM-DD/</code></td></tr>
+</table>
+
+<h3>脚本与部署</h3>
+
+<p><strong>脚本位置</strong>：<code>/opt/media/tools/drone_segment_recorder.py</code></p>
+
+<p><strong>依赖</strong>：</p>
+<pre><code>pip3 install paho-mqtt==1.6.1</code></pre>
+
+<p><strong>systemd 服务</strong>：<code>/etc/systemd/system/drone-segment-recorder.service</code></p>
+
+<pre><code>[Unit]
+Description=Drone Segment Recorder (MQTT-driven historyId-based recording)
+After=network.target docker.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/media/tools
+ExecStart=/usr/bin/python3 /opt/media/tools/drone_segment_recorder.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+<p><strong>管理命令</strong>：</p>
+<pre><code># 安装服务
+systemctl daemon-reload
+systemctl enable drone-segment-recorder --now
+
+# 查看状态
+systemctl status drone-segment-recorder
+
+# 查看日志
+journalctl -u drone-segment-recorder -f
+tail -f /opt/media/logs/drone_segment.log
+
+# 重启
+systemctl restart drone-segment-recorder
+
+# 查看录制文件
+ls -lh /opt/media/www/record/cszl/drone/segments/$(date +%Y-%m-%d)/</code></pre>
+
+<h3>配置参数（脚本内）</h3>
+
+<table>
+<tr><th>参数</th><th>值</th><th>说明</th></tr>
+<tr><td>MQTT_BROKER</td><td><code>10.129.80.225</code></td><td>MQTT 服务器地址</td></tr>
+<tr><td>MQTT_PORT</td><td><code>1883</code></td><td>MQTT 端口</td></tr>
+<tr><td>MQTT_USER</td><td><code>cszl</code></td><td>用户名</td></tr>
+<tr><td>MQTT_PASS</td><td><code>cszl@2026</code></td><td>密码</td></tr>
+<tr><td>MQTT_TOPIC</td><td><code>/ucare/third/uavState</code></td><td>监听主题</td></tr>
+<tr><td>PROXY_HOST</td><td><code>10.129.80.244</code></td><td>RTMP 代理服务器</td></tr>
+<tr><td>PROXY_PORT</td><td><code>21020</code></td><td>soca t 转发端口</td></tr>
+<tr><td>SEGMENTS_DIR</td><td><code>/opt/media/www/record/cszl/drone-segment</code></td><td>片段输出目录</td></tr>
+<tr><td>HISTORY_SILENCE_TIMEOUT</td><td><code>30</code></td><td>单个 historyId 静默超时（秒）</td></tr>
+<tr><td>FFMPEG_PATH</td><td><code>/opt/media/tools/ffmpeg</code></td><td>FFmpeg 可执行文件</td></tr>
+</table>
+
+<h3>文件命名规范</h3>
+
+<pre><code>{historyId}_{start_time}_{end_time}.mp4
+
+示例：1509940239987113984_20260529153652_20260529153722.mp4
+
+- historyId：飞行任务唯一 ID（来自 MQTT 消息）
+- start_time：录制开始时间，北京时间，格式 YYYYMMDDhhmmss
+- end_time：录制结束时间，北京时间，格式 YYYYMMDDhhmmss</code></pre>
+
+<h3>故障排查</h3>
+
+<table>
+<tr><th>现象</th><th>原因</th><th>处理</th></tr>
+<tr><td>未生成片段文件</td><td>MQTT 未连接或消息无 historyId</td><td>检查 <code>journalctl -u drone-segment-recorder</code> 和 <code>/opt/media/logs/drone_segment.log</code></td></tr>
+<tr><td>服务启动后无后续日志</td><td><code>threading.Lock</code> 死锁（watchdog 与 stop_recording 互锁）</td><td>脚本必须使用 <code>threading.RLock</code>（可重入锁）</td></tr>
+<tr><td>文件无法播放</td><td>FFmpeg 被强制 kill，moov atom 未写入</td><td>脚本使用 SIGTERM + 8s 超时，停止后自动 faststart 重封装</td></tr>
+<tr><td>播放器无法拖动进度条</td><td>moov atom 在文件末尾</td><td>脚本已内置 faststart 重封装，合并后自动处理</td></tr>
+<tr><td>StreamUI 播放页显示"无录像"</td><td>FFmpeg 录制的 MP4 缺少 <code>creation_time</code> 元数据</td><td>脚本已修复：停止录制后自动注入 UTC 格式的 <code>creation_time</code>，供 StreamUI 解析时间轴</td></tr>
+<tr><td>StreamUI 时间轴偏移 8 小时</td><td><code>creation_time</code> 使用本地时间但带 <code>Z</code>（UTC）后缀</td><td><code>creation_time</code> 必须用 UTC 时间，脚本使用 <code>datetime.utcfromtimestamp()</code> 生成</td></tr>
+<tr><td>faststart 失败 exit 234</td><td>FFmpeg 输出到同目录 <code>.tmp</code> 时触发异常</td><td>脚本已修复：faststart 输出到 <code>/tmp/</code>，成功后 <code>os.replace()</code> 移回原位</td></tr>
+<tr><td>height=0 时未停止</td><td>MQTT 消息间隔大，未捕获到 0</td><td>静默超时 30 秒自动兜底停止</td></tr>
+<tr><td>segments 未同步到 MinIO</td><td>cron 未到执行时间</td><td><code>sync_by_scene.sh</code> 每 5 分钟跑一次，递归同步子目录</td></tr>
+<tr><td>代理服务器 socat 启动失败</td><td><code>ExecStart</code> 路径错误</td><td><code>which socat</code> 确认实际路径（通常为 <code>/usr/bin/socat</code>）</td></tr>
+</table>
+
+----
+
+<h1 id="sec6">6. 监控运维</h1>
+
+<h2>6.1 端口检查</h2>
+
+<pre><code># 检查关键端口
+ss -tlnp | grep -E ':(80|1935|554|10800|8091|9000|9001)\s'
+
+# 预期结果：
+# *:80        - ZLM HTTP
+# *:1935      - ZLM RTMP
+# *:554       - ZLM RTSP
+# *:10800     - StreamUI
+# *:8091      - rclone cszl
+# *:9000      - MinIO API
+# *:9001      - MinIO Console</code></pre>
+
+<h2>6.2 日志分析</h2>
+
+<table>
+<tr><th>问题</th><th>日志位置</th><th>关键词</th></tr>
+<tr><td>拉流失败</td><td>docker logs zlm</td><td>connection refused, timeout</td></tr>
+<tr><td>同步失败</td><td>/opt/media/logs/sync.log</td><td>Failed to, Error</td></tr>
+<tr><td>rclone 服务异常</td><td>journalctl -u rclone-minio</td><td>Failed, Error</td></tr>
+</table>
+
+<pre><code># ZLM 关键日志分析
+docker logs zlm --tail 200 | grep -E "(error|failed|timeout)"
+
+# rclone 同步日志分析
+grep -i error /opt/media/logs/sync.log</code></pre>
+
+<h2>6.3 性能监控</h2>
+
+<table>
+<tr><th>指标</th><th>阈值</th><th>处理方式</th></tr>
+<tr><td>磁盘使用率</td><td>> 80%</td><td>告警+清理</td></tr>
+<tr><td>Docker 容器状态</td><td>非 running</td><td>立即重启</td></tr>
+<tr><td>rclone 服务</td><td>非 active</td><td>立即重启</td></tr>
+<tr><td>ZLM 流数量</td><td>0（正常应有流）</td><td>检查拉流状态</td></tr>
+</table>
+
+<h2>6.4 巡检指标</h2>
+
+<table>
+<tr><th>指标</th><th>正常范围</th><th>处理方式</th></tr>
+<tr><td>Docker 容器状态</td><td>running</td><td>重启或告警</td></tr>
+<tr><td>rclone 服务</td><td>active</td><td>重启或告警</td></tr>
+<tr><td>磁盘使用率</td><td>< 80%</td><td>清理或扩容</td></tr>
+<tr><td>MinIO 连接</td><td>通</td><td>检查网络</td></tr>
+</table>
+
+<h2>6.5 告警规则</h2>
+
+<table>
+<tr><th>级别</th><th>条件</th><th>通知方式</th></tr>
+<tr><td>P0</td><td>服务宕机</td><td>电话</td></tr>
+<tr><td>P1</td><td>rclone 服务停止</td><td>短信</td></tr>
+<tr><td>P2</td><td>同步失败</td><td>邮件</td></tr>
+</table>
+
+---
+
+<h1 id="sec6-5">6.5 MinIO IAM 权限管理</h1>
+
+<p><strong>功能</strong>：使用 MinIO 原生 IAM 实现细粒度权限控制</p>
+
+<h3>当前用户与策略</h3>
+
+<table>
+<tr><th>用户</th><th>策略</th><th>可访问桶</th><th>权限</th></tr>
+<tr><td>root (minioadmin)</td><td>consoleAdmin</td><td>所有桶</td><td>完全控制</td></tr>
+<tr><td>cszlkey</td><td>cszl-readonly</td><td>cszl-media</td><td>只读</td></tr>
+</table>
+
+<h3>cszl-readonly 策略详情</h3>
+
+<pre><code>{
+ "Version": "2012-10-17",
+ "Statement": [
+  {
+   "Effect": "Allow",
+   "Action": ["s3:GetObject", "s3:ListBucket"],
+   "Resource": ["arn:aws:s3:::cszl-media", "arn:aws:s3:::cszl-media/*"]
+  }
+ ]
+}</code></pre>
+
+<h3>新建场景用户（示例：新增 zhdg 场景）</h3>
+
+<pre><code># 1. 创建 zhdg-media 桶
+/root/mc mb minio/zhdg-media --ignore-existing
+
+# 2. 创建 zhdg-readonly 策略
+cat > /tmp/zhdg-readonly.json << 'EOF'
+{
+ "Version": "2012-10-17",
+ "Statement": [
+  {
+   "Effect": "Allow",
+   "Action": ["s3:GetObject", "s3:ListBucket"],
+   "Resource": ["arn:aws:s3:::zhdg-media", "arn:aws:s3:::zhdg-media/*"]
+  }
+ ]
+}
+EOF
+
+/root/mc admin policy create minio zhdg-readonly /tmp/zhdg-readonly.json
+
+# 3. 创建用户并绑定策略
+/root/mc admin user add minio zhdgkey ZhdG2026@Key!Pass
+/root/mc admin policy attach minio zhdg-readonly --user zhdgkey</code></pre>
+
+<h3>常用命令</h3>
+
+<pre><code># 查看所有用户
+mc admin user list minio
+
+# 查看所有策略
+mc admin policy list minio
+
+# 查看用户信息
+mc admin user info minio cszlkey
+
+# 禁用/启用用户
+mc admin user disable minio cszlkey
+mc admin user enable minio cszlkey
+
+# 删除用户
+mc admin user remove minio cszlkey</code></pre>
+
+---
+
+<h1 id="sec6-6">6.6 对外接口服务</h1>
+
+<p><strong>功能</strong>：提供录像文件访问给外部用户</p>
+
+<h3>访问方式概览</h3>
+
+<table>
+<tr><th>方式</th><th>端口</th><th>认证</th><th>适用场景</th></tr>
+<tr><td>S3 API</td><td>9000</td><td>Access Key + Secret Key</td><td>程序员/SDK/工具</td></tr>
+<tr><td>rclone serve HTTP</td><td>8091</td><td>Basic Auth</td><td>浏览器/简单 HTTP 客户端</td></tr>
+<tr><td>MinIO Console</td><td>9001</td><td>Web 登录</td><td>手动管理</td></tr>
+</table>
+
+<h3>方式一：S3 API（推荐）</h3>
+
+<p><strong>配置参数</strong>：</p>
+
+<table>
+<tr><th>参数</th><th>值</th></tr>
+<tr><td>Endpoint</td><td><code>http://10.129.80.211:9000</code></td></tr>
+<tr><td>Access Key</td><td><code>cszlkey</code></td></tr>
+<tr><td>Secret Key</td><td><code>Ka93@fnnbd2A</code></td></tr>
+<tr><td>Bucket</td><td><code>cszl-media</code></td></tr>
+<tr><td>Region</td><td><code>us-east-1</code>（默认）</td></tr>
+</table>
+
+<p><strong>Python boto3 示例</strong>：</p>
+
+<pre><code>import boto3
+
+s3 = boto3.client('s3',
+    endpoint_url='http://10.129.80.211:9000',
+    aws_access_key_id='cszlkey',
+    aws_secret_access_key='Ka93@fnnbd2A',
+    region_name='us-east-1'
+)
+
+# 列出文件
+result = s3.list_objects_v2(Bucket='cszl-media', Prefix='cszl/')
+for obj in result.get('Contents', []):
+    print(obj['Key'], obj['Size'])
+
+# 下载文件
+s3.download_file('cszl-media', 'cszl/machinenest/2026-04-28/video.mp4', '/local/video.mp4')</code></pre>
+
+<p><strong>AWS CLI 示例</strong>：</p>
+
+<pre><code># 配置 alias
+mc alias set minio http://10.129.80.211:9000 cszlkey Ka93@fnnbd2A
+
+# 列出文件
+mc ls minio/cszl-media/cszl/machinenest/
+
+# 下载文件
+mc cp minio/cszl-media/cszl/machinenest/2026-04-28/video.mp4 /local/video.mp4</code></pre>
+
+<h3>方式二：rclone serve HTTP</h3>
+
+<p><strong>访问地址</strong>：<code>http://10.129.80.242:8091/</code></p>
+
+<p><strong>认证</strong>：HTTP Basic Auth</p>
+<ul>
+<li>用户名：<code>cszlkey</code></li>
+<li>密码：<code>Ka93@fnnbd2A</code></li>
+</ul>
+
+<p><strong>URL 格式</strong>：</p>
+
+<pre><code># 直接访问文件
+http://10.129.80.242:8091/cszl/machinenest/2026-04-28/video.mp4
+
+# 浏览器访问（会弹出认证对话框）
+http://10.129.80.242:8091/cszl/</code></pre>
+
+<h3>方式三：MinIO Console</h3>
+
+<p><strong>访问地址</strong>：<code>http://10.129.80.211:9001</code></p>
+
+<p><strong>登录账号</strong>：</p>
+<ul>
+<li>用户名：<code>minioadmin</code></li>
+<li>密码：<code>Ka93@fnnbd2A</code></li>
+</ul>
+
+<p><strong>用途</strong>：手动管理桶、用户、策略；查看文件；调试</p>
+
+---
+
+<h1 id="sec7">7. 数据管理</h1>
+
+<h2>7.1 备份恢复</h2>
+
+<h3>备份策略</h3>
+
+<table>
+<tr><th>备份内容</th><th>频率</th><th>保留周期</th><th>备份方式</th></tr>
+<tr><td>ZLM 配置</td><td>每周</td><td>30 天</td><td>文件复制</td></tr>
+<tr><td>录像文件</td><td>实时同步</td><td>永久</td><td>rclone sync</td></tr>
+</table>
+
+<h3>备份操作</h3>
+
+<pre><code># 备份 ZLM 配置
+cp -r /opt/media/conf /data/backup/zlm_conf_$(date +%Y%m%d)
+
+# 验证 MinIO 同步状态
+/root/mc ls minio/cszl-media/cszl/ | tail -5</code></pre>
+
+<h2>7.2 数据过期策略</h2>
+
+<table>
+<tr><th>数据</th><th>过期策略</th><th>处理方式</th></tr>
+<tr><td>本地录像</td><td>同步到 MinIO 后 7 天删除</td><td>cron 任务清理</td></tr>
+<tr><td>MinIO 录像</td><td>永久保留</td><td>-</td></tr>
+<tr><td>同步日志</td><td>7 天后轮转</td><td>logrotate</td></tr>
+</table>
+
+<pre><code># 清理本地 7 天前的录像（保留 MinIO 副本）
+find /opt/media/www/record -name "*.ts" -mtime +7 -delete
+find /opt/media/www/record -name "*.mp4" -mtime +7 -delete</code></pre>
+
+<h2>7.3 权限管理</h2>
+
+<blockquote>
+<p><strong>注意</strong>：所有 Service Account 仅授予只读权限，禁止授予写入权限</p>
+</blockquote>
+
+<h3>Service Account 凭证</h3>
+
+<table>
+<tr><th>账号</th><th>Access Key</th><th>Secret Key</th><th>权限</th><th>用途</th><th>端口</th></tr>
+<tr><td>cszl</td><td>cszlkey</td><td>Ka93@fnnbd2A</td><td>只读</td><td>城市治理主账号</td><td>8091</td></tr>
+</table>
+
+<h3>安全策略</h3>
+
+<ul>
+<li>rclone serve 使用 Basic Auth 保护</li>
+<li>定期更换 Service Account 密钥（建议每 90 天）</li>
+<li>生产环境启用 IP 白名单</li>
+</ul>
+
+<h3>第三方访问 MinIO 服务</h3>
+
+<p>通过 rclone serve HTTP 提供基于 S3 路径的只读访问，第三方使用 Basic Auth 认证。</p>
+
+<h4>服务配置</h4>
+
+<table>
+<tr><th>参数</th><th>值</th></tr>
+<tr><td>访问地址</td><td>http://10.129.80.242:8091</td></tr>
+<tr><td>认证方式</td><td>Basic Auth（用户/密码）</td></tr>
+<tr><td>存储路径</td><td>minio:cszl-media/cszl/</td></tr>
+</table>
+
+<h4>访问示例</h4>
+
+<pre><code># 列出所有录像
+curl -u cszlkey:Ka93@fnnbd2A "http://10.129.80.242:8091/"
+
+# 下载指定录像
+curl -u cszlkey:Ka93@fnnbd2A "http://10.129.80.242:8091/2026-04-22/live.m3u8" -o output.m3u8</code></pre>
+
+<h4>路径映射规则</h4>
+
+<table>
+<tr><th>MinIO 完整路径</th><th>访问 URL 路径</th></tr>
+<tr><td>cszl-media/cszl/2026-04-22/live.m3u8</td><td>/2026-04-22/live.m3u8</td></tr>
+<tr><td>cszl-media/cszl/2026-04-22/rec.mp4</td><td>/2026-04-22/rec.mp4</td></tr>
+</table>
+
+---
+
+<h1 id="sec8">8. 故障排除</h1>
+
+<h2>8.1 常见问题汇总</h2>
+
+<h3>Q1: StreamUI 看不到视频流</h3>
+
+<p><strong>问题现象</strong>：StreamUI 界面显示流离线</p>
+
+<p><strong>可能原因</strong>：</p>
+<ul>
+<li>ZLM Docker 网络模式错误</li>
+<li>拉流 API 参数遗漏</li>
+</ul>
+
+<p><strong>处理步骤</strong>：</p>
+<ol>
+<li>检查 ZLM 是否使用 host 网络：<code>docker ps | grep zlm</code></li>
+<li>检查网络模式是否为 <code>--network host</code></li>
+<li>重新创建容器：</li>
+</ol>
+<pre><code>docker stop zlm && docker rm zlm
+docker run -d --name zlm --network host \
+  -v /opt/media/conf:/opt/media/conf \
+  -v /opt/media/www:/opt/media/www \
+  zlmediakit/zlmediakit:master</code></pre>
+
+<h3>Q2: 拉流失败 - connection refused</h3>
+
+<p><strong>问题现象</strong>：API 返回 <code>{"code":-1,"msg":"connection refused"}</code></p>
+
+<p><strong>可能原因</strong>：</p>
+<ul>
+<li>源流地址不可达</li>
+<li>代理 URL 未注册</li>
+</ul>
+
+<p><strong>处理步骤</strong>：</p>
+<ol>
+<li>确认源地址可访问：<code>curl -s --connect-timeout 5 rtmp://source:1935/live/stream</code></li>
+<li>联系平台方获取正确的代理 URL</li>
+</ol>
+
+<h3>Q3: 录像不同步到 MinIO</h3>
+
+<p><strong>问题现象</strong>：MinIO 中没有新录像文件</p>
+
+<p><strong>可能原因</strong>：</p>
+<ul>
+<li>rclone 服务未运行</li>
+<li>同步脚本执行失败</li>
+<li>正在录制的文件（以 <code>.</code> 开头）被排除</li>
+</ul>
+
+<p><strong>处理步骤</strong>：</p>
+<ol>
+<li>检查 rclone 服务：<code>systemctl status rclone-minio</code></li>
+<li>检查同步日志：<code>tail /opt/media/logs/sync.log</code></li>
+<li>手动执行同步测试：<code>/opt/media/tools/sync_by_scene.sh</code></li>
+</ol>
+
+<h3>Q4: 第三方无法访问视频</h3>
+
+<p><strong>问题现象</strong>：访问 <code>http://IP:8091</code> 返回连接失败</p>
+
+<p><strong>可能原因</strong>：</p>
+<ul>
+<li>rclone 未绑定 IPv4</li>
+<li>防火墙未开放端口</li>
+</ul>
+
+<p><strong>处理步骤</strong>：</p>
+<ol>
+<li>检查监听地址：<code>ss -tlnp | grep 8091</code></li>
+<li>如显示 <code>[::]:8091</code>，需要添加 <code>--bind 0.0.0.0</code></li>
+<li>修改 systemd 服务并重启：</li>
+</ol>
+<pre><code>ExecStart=/opt/media/tools/rclone serve http minio:cszl-media/cszl/ --addr 0.0.0.0:8091 --user cszlkey --pass 'Ka93@fnnbd2A' --vfs-cache-mode writes --bind 0.0.0.0
+systemctl daemon-reload
+systemctl restart rclone-minio</code></pre>
+
+<h3>Q5: rclone sync 传输正在录制的文件失败</h3>
+
+<p><strong>问题现象</strong>：报错 <code>corrupted on transfer: sizes differ</code></p>
+
+<p><strong>可能原因</strong>：</p>
+<ul>
+<li>文件正在被 ZLM 写入，大小不断变化</li>
+</ul>
+
+<p><strong>处理步骤</strong>：</p>
+<ol>
+<li>排除以 <code>.</code> 开头的临时文件：</li>
+</ol>
+<pre><code>/opt/media/tools/rclone sync /opt/media/www/record/ minio:cszl-media/cszl/ --exclude "**/.*" -P</code></pre>
+<ol start="2">
+<li>等录制完成后再同步</li>
+</ol>
+
+<h3>Q6: 拉流代理超时掉线</h3>
+
+<p><strong>问题现象</strong>：StreamUI 显示流离线，ZLM 日志出现 <code>"wait http response body timeout"</code>，<code>getMediaList</code> 无返回</p>
+
+<p><strong>可能原因</strong>：</p>
+<ul>
+<li>ZLM 内部连接线程挂死后超时</li>
+<li>长时间运行后连接状态异常</li>
+</ul>
+
+<p><strong>处理步骤</strong>：</p>
+<ol>
+<li>检查源流是否正常：<code>curl -I --connect-timeout 5 "源流地址"</code></li>
+<li>源流正常 → 问题在 ZLM 侧，删除该拉流代理重新添加</li>
+<li>ZLM Web「拉流代理」页面 → 点击该流右侧「删除」→ 左半边表单重新填写添加</li>
+<li>或使用 API 重新添加：</li>
+</ol>
+<pre><code>curl -X POST "http://127.0.0.1:80/index/api/addStreamProxy?secret=mysecret123" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "vhost": "__defaultVhost__",
+    "app": "cszl",
+    "stream": "流ID",
+    "url": "源流地址",
+    "retry_count": -1,
+    "enable_rtsp": true,
+    "enable_rtmp": true,
+    "enable_ts": true,
+    "enable_fmp4": true
+  }'</code></pre>
+
+<h3>Q7: ZLM FFmpeg 推拉流无法稳定运行</h3>
+
+<p><strong>问题现象</strong>：FFmpeg 推拉流配置在页面上显示存在，但 <code>getMediaList</code> 无返回，容器内 <code>ps aux | grep ffmpeg</code> 无进程</p>
+
+<p><strong>可能原因</strong>：</p>
+<ul>
+<li>ZLM fork ffmpeg 后进程启动失败或瞬间退出</li>
+<li>ffmpeg 路径不正确或运行时依赖缺失</li>
+<li>非标 RTMP 源导致 ZLM 内部调度异常</li>
+</ul>
+
+<p><strong>处理步骤</strong>：</p>
+<ol>
+<li>检查 ZLM 日志：<code>docker logs zlm --tail 100 | grep -iE "ffmpeg|error|failed"</code></li>
+<li>检查 ffmpeg 是否存在：<code>docker exec zlm which ffmpeg</code></li>
+<li>手动测试 ffmpeg 能否拉到源：<code>docker exec zlm /usr/bin/ffmpeg -re -i "源流地址" -t 5 -f null -</code></li>
+<li>如果手动能跑但 ZLM 自动调度不行，<strong>改用 systemd 守护 ffmpeg 进程</strong>（详见 5.1.1 节）</li>
+</ol>
+
+<h2>8.2 诊断工具</h2>
+
+<pre><code># ZLM 状态检查
+curl -s "http://127.0.0.1:80/index/api/getMediaList?secret=mysecret123"
+
+# ZLM 日志
+docker logs zlm --tail 50
+
+# rclone 服务状态
+systemctl status rclone-minio
+
+# MinIO 桶列表
+/root/mc ls minio/
+
+# 录像同步日志
+tail -f /opt/media/logs/sync.log</code></pre>
+
+---
+
+<h1 id="sec9">9. 附录</h1>
+
+<h2>9.1 命令参考</h2>
+
+<h3>Docker 服务管理</h3>
+<pre><code>docker start zlm
+docker stop zlm
+docker restart zlm
+docker logs zlm --tail 100</code></pre>
+
+<h3>rclone 服务管理</h3>
+<pre><code>systemctl start rclone-minio
+systemctl stop rclone-minio
+systemctl restart rclone-minio
+systemctl status rclone-minio</code></pre>
+
+<h3>MinIO mc 命令</h3>
+<pre><code>/root/mc alias set minio http://localhost:9000 minioadmin Ka93@fnnbd2A
+/root/mc ls minio/
+/root/mc admin user list minio</code></pre>
+
+<h2>9.2 配置参考</h2>
+
+<h3>ZLM 关键配置</h3>
+<pre><code>[api]
+secret=mysecret123
+
+[http]
+port=80
+
+[rtmp]
+port=1935
+
+[hls]
+hls_demand=0
+hls_save_path=/opt/media/www</code></pre>
+
+<h3>rclone systemd 服务</h3>
+<pre><code>[Unit]
+Description=rclone MinIO HTTP Service
+After=network.target
+
+[Service]
+ExecStart=/opt/media/tools/rclone serve http minio:cszl-media/cszl/ --addr 0.0.0.0:8091 --user cszlkey --pass 'Ka93@fnnbd2A' --vfs-cache-mode writes --bind 0.0.0.0
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+<h3>ffmpeg 推流 systemd 服务</h3>
+<pre><code># /etc/systemd/system/zlm-5gacamera.service
+[Unit]
+Description=ZLM 5gacamera FFmpeg Relay
+After=docker.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/docker exec zlm /usr/bin/ffmpeg -re -i rtmp://10.129.80.244/proxy_example -c copy -f flv rtmp://127.0.0.1/cszl/5gacamera
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+<h3>zlm-drone.service（无人机 RTMP 代理）</h3>
+<pre><code># /etc/systemd/system/zlm-drone.service
+[Unit]
+Description=ZLM Drone FFmpeg Proxy
+After=docker.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/docker exec zlm /usr/bin/ffmpeg -re -i rtmp://10.129.80.244:1935/uav -c copy -f flv rtmp://127.0.0.1/cszl/drone
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+<p><strong>注意</strong>：不要添加 <code>Requires=docker.service</code>，否则 systemd 会报 <code>Unit not found</code>。</p>
+
+<p><strong>新增非标源时</strong>：复制该服务文件，修改 <code>ExecStart</code> 中的源地址和目的流 ID：</p>
+<pre><code>cp /etc/systemd/system/zlm-5gacamera.service /etc/systemd/system/zlm-新流ID.service
+# 修改源地址和目的地址
+systemctl daemon-reload
+systemctl enable zlm-新流ID --now</code></pre>
+
+<h3>socat-rtmp-proxy.service（RTMP 端口转发代理）</h3>
+<pre><code># /etc/systemd/system/socat-rtmp-proxy.service
+[Unit]
+Description=RTMP Port Forward Proxy (21020 -> upstream:21019)
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/socat TCP4-LISTEN:21020,fork TCP4:10.129.23.248:21019
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+<p><strong>管理命令</strong>：</p>
+<pre><code>systemctl start socat-rtmp-proxy
+systemctl stop socat-rtmp-proxy
+systemctl restart socat-rtmp-proxy
+systemctl status socat-rtmp-proxy --no-pager
+ss -tlnp | grep 21020</code></pre>
+
+<h2>9.3 联系人列表</h2>
+
+<table>
+<tr><th>角色</th><th>联系方式</th><th>职责</th></tr>
+<tr><td>平台管理员</td><td>-</td><td>流媒体配置</td></tr>
+<tr><td>存储管理员</td><td>-</td><td>MinIO 管理</td></tr>
+</table>
+
+---
+
+<h1 id="sec10">10. 修订记录</h1>
+
+<h2>10.1 版本历史</h2>
+
+<table>
+<tr><th>版本</th><th>日期</th><th>作者</th><th>变更内容</th></tr>
+<tr><td>v1.0</td><td>2026-04-21</td><td>秦</td><td>初始版本 - ZLM + StreamUI 基础配置</td></tr>
+<tr><td>v1.1</td><td>2026-04-22</td><td>秦</td><td>新增 MinIO 存储、rclone 同步、多场景扩展</td></tr>
+<tr><td>v1.2</td><td>2026-04-22</td><td>秦</td><td>补充 addStreamProxy API、录制配置、StreamUI 路径修复、同步脚本</td></tr>
+<tr><td>v1.3</td><td>2026-04-22</td><td>秦</td><td>按规范模板重组章节结构</td></tr>
+<tr><td>v1.4</td><td>2026-04-23</td><td>秦</td><td>按规范模板更新：封面页、前置修订记录、10.1版本历史格式</td></tr>
+<tr><td>v1.5</td><td>2026-04-23</td><td>秦</td><td>按规范模板更新：封面页新样式、目录样式、#166ede商务蓝配色</td></tr>
+<tr><td>v1.6</td><td>2026-04-23</td><td>秦</td><td>按规范模板更新：目录区域新结构（catalog-title-wrap/catalog-divider）</td></tr>
+<tr><td>v2.0</td><td>2026-04-29</td><td>秦</td><td>重大更新：流命名规范化（machinenest/drone/5gacamera），录制路径改为 {场景}/{流ID} 结构，rclone sync 改为按场景自动分流脚本</td></tr>
+<tr><td>v2.1</td><td>2026-04-29</td><td>秦</td><td>新增 S3 API 访问方式、MinIO IAM 权限管理、对外接口说明；清理 yyzx 场景（仅保留 cszl）</td></tr>
+<tr><td>v2.2</td><td>2026-05-21</td><td>秦</td><td>5gacamera 改用 systemd ffmpeg 守护（copy 模式）；新增非标 RTMP 源处理方案；新增拉流代理超时掉线、FFmpeg 推拉流失败等故障排查案例</td></tr>
+<tr><td>v2.3</td><td>2026-05-22</td><td>秦</td><td>drone 流恢复在线，接入方式改为 systemd ffmpeg（RTMP 代理）；补充代理服务器 MediaMTX + nginx 架构；补充 zlm-drone.service 配置</td></tr>
+<tr><td>v2.4</td><td>2026-05-27</td><td>秦</td><td>新增无人机分段录制服务：按 historyId 自动分段录制，与现有连续录制并行；新增 drone_segment_recorder.py + systemd 配置</td></tr>
+<tr><td>v2.5</td><td>2026-05-29</td><td>秦</td><td>5.5 节全面升级：按日期分目录、同 historyId 自动合并、faststart 重封装；新增 socat RTMP 代理架构；修复 Lock 死锁为 RLock；MQTT 主题修正为 /ucare/third/uavState；静默超时调整为 30s</td></tr>
+<tr><td>v2.6</td><td>2026-05-29</td><td>秦</td><td>修复 StreamUI 播放页"无录像"：FFmpeg 录制注入 creation_time（UTC 格式）；faststart 输出路径改为 /tmp 避免 exit 234；更新文件命名规范；MinIO 同步覆盖旧文件</td></tr>
+</table>
+
+<hr>
+
+<footer>
+<p>视频平台运维手册 v2.6 | 最后更新：2026-05-29 | 维护者：秦</p>
+</footer>
+
+</body>
+</html>
